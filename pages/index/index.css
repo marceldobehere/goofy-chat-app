@@ -1,0 +1,26 @@
+/*make a simple dark theme*/
+
+body
+{
+    background-color: #000;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+}
+
+/*make text area also dark mode*/
+
+textarea
+{
+    background-color: #000;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+}
+
+/*make the buttons dark mode*/
+
+button
+{
+    background-color: #000;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+}
