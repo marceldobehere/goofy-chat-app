@@ -3,6 +3,7 @@ let sessionStuff;
 let dbStuff;
 let loginManager;
 let registerManager;
+let calcServiceManager;
 
 function stringify(obj)
 {
@@ -19,12 +20,13 @@ function stringify(obj)
 }
 
 
-function initApp(_sessionStuff, _dbStuff, _loginManager, _registerManager)
+function initApp(_sessionStuff, _dbStuff, _loginManager, _registerManager, _calcServiceManager)
 {
     sessionStuff = _sessionStuff;
     dbStuff = _dbStuff;
     loginManager = _loginManager;
     registerManager = _registerManager;
+    calcServiceManager = _calcServiceManager;
 }
 
 const _readline = require('readline').createInterface({
@@ -54,6 +56,12 @@ async function start()
         {
             console.log("> Exiting...");
             process.exit(0);
+            continue;
+        }
+        else if (cmd.startsWith("/reload calc services") || cmd.startsWith("/rel calc"))
+        {
+            calcServiceManager.reloadAllCalcServices();
+            console.log("> Reloaded all calc services!");
             continue;
         }
         else if (cmd.startsWith("/show all users"))

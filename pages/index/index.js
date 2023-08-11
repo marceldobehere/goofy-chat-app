@@ -60,3 +60,16 @@ var generateKeys = function () {
 $('#generate').click(generateKeys);
 
 generateKeys();
+
+var ENV_CLIENT_PUBLIC_KEY;
+var ENV_CLIENT_PRIVATE_KEY;
+var ENV_SERVER_PUBLIC_KEY;
+
+{
+    let temp = localStorage.getItem("myKey");
+    console.log(temp);
+    if (!temp)
+    {
+        alert('bruh');
+    }
+}
