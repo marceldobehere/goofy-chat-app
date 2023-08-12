@@ -4,3 +4,4 @@ var ENV_SERVER_PUBLIC_KEY;
 var ENV_USER_ID;
 var MAILS;
 
+var CURRENT_USER_ID = 0;

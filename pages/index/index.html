@@ -13,30 +13,15 @@
     <p>You are: <span id="user-id">IDK</span></p>
 
     <div class="main-box">
-        <div id="users" class="item-container users">
-            <button class="item user">Person 1</button>
-            <button class="item user">Person 2</button>
-            <button class="item user">Person 3</button>
-            <button class="item user">Person 4</button>
-            <button class="item user">Person 5</button>
-            <button class="item user">Person 6</button>
-            <button class="item user">Person 7</button>
-        </div>
+        <div id="users" class="item-container users"></div>
+        <button id="user-add" onclick="addUserClick()">Add User</button>
 
         <div id="mail-div" class="item-container mails">
-            <div id="mails" class="item-container mail-list">
-                <div class="item mail">Hallo 1</div>
-                <div class="item mail">Hallo 2</div>
-                <div class="item mail">Hallo 3</div>
-                <div class="item mail">Hallo 4</div>
-                <div class="item mail">Hallo 5</div>
-                <div class="item mail">Hallo 6</div>
-                <div class="item mail">Hallo 7</div>
-
+            <div id="mails" class="item-container mail-list" oncontextmenu="chatRightClick(event);return false;" onscroll="chatScroll()">
             </div>
-            <div id="message-input" class="mail-input">
-                <textarea class="input-msg" placeholder="Enter a Message"></textarea>
-                <button class="send-msg">Send</button>
+            <div class="mail-input">
+                <textarea onkeydown="msgKeyPressed(event);" id="message-input" class="input-msg" placeholder="Enter a Message"></textarea>
+                <button class="send-msg" onclick="messageSend()">Send</button>
             </div>
         </div>
     </div>

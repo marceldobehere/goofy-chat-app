@@ -42,7 +42,7 @@ function reloadAllCalcServices()
     }
     //console.log();
 
-    console.log(calcServiceDict);
+    //console.log(calcServiceDict);
 }
 
 module.exports = {initStuff, reloadAllCalcServices};

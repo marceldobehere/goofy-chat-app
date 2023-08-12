@@ -78,8 +78,14 @@ const encryptionStuff = require("./yesServer/encryptionStuff.js");
 const keyPath = __dirname + "/data/";
 encryptionStuff.initApp(keyPath+"private-key.txt", keyPath+"public-key.txt");
 
+const socketSessionStuff = require("./yesServer/socketSessionStuff.js");
+socketSessionStuff.initApp(encryptionStuff, io, dbStuff);
+
 const registerManager = require("./yesServer/registerHandling");
-registerManager.initApp(encryptionStuff, app, io, dbStuff);
+registerManager.initApp(encryptionStuff, app, io, dbStuff, socketSessionStuff);
+
+const mailManager = require("./yesServer/mailHandling");
+mailManager.initApp(encryptionStuff, app, io, dbStuff, socketSessionStuff);
 
 const shell = require("./yesServer/shell");
 shell.initApp(dbStuff, registerManager, calcServiceManager);

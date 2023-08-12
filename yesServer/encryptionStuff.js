@@ -10,20 +10,20 @@ function initApp(privateKeyPath, publicKeyPath)
     _privateKey = fs.readFileSync(privateKeyPath, 'utf8');
     _publicKey = fs.readFileSync(publicKeyPath, 'utf8');
 
-
     console.log('> Encryption test');
     let testStr = "Hello World!";
-    console.log(`> Test String: ${testStr}`);
+    //console.log(`> Test String: ${testStr}`);
     let encryptedStr = encryptStr(testStr);
-    console.log(`> Encrypted String: ${encryptedStr}`);
+    //console.log(`> Encrypted String: ${encryptedStr}`);
     let decryptedStr = decryptStr(encryptedStr);
-    console.log(`> Decrypted String: ${decryptedStr}`);
+    //console.log(`> Decrypted String: ${decryptedStr}`);
     if (testStr != decryptedStr)
     {
         console.log('> Encryption test failed');
         process.exit(1);
     }
     console.log('> Encryption test done');
+    console.log();
 }
 
 

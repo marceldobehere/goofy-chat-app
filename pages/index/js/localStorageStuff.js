@@ -19,14 +19,15 @@ function loadEncryptedObject(key)
     if (!temp)
         return null;
 
-    temp = decryptClientStr(temp);
+    temp = JSON.parse(temp);
+    temp = rsaStringListIntoString(temp, ENV_CLIENT_PRIVATE_KEY);
     return JSON.parse(temp);
 }
 
 function saveEncryptedObject(key, obj)
 {
     let temp = JSON.stringify(obj);
-    temp = encryptClientStr(temp);
-
+    temp = StringIntoRsaStringList(temp, ENV_CLIENT_PRIVATE_KEY);
+    temp = JSON.stringify(temp);
     localStorage.setItem(key, temp);
 }
