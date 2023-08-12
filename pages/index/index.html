@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Secure Chat/Mail App</title>
+    <title>Roccs Goofy Secure Chat App</title>
     <link rel="stylesheet" href="index.css">
     <meta charset="utf-8">
 
@@ -9,39 +9,45 @@
     <script src="/shared/js/js_encrypt/jsencrypt.min.js"></script>
 </head>
 <body>
-    <h1>Secure Chat/Mail App</h1>
-    <p>Hello</p>
-    <br>
+    <h1>Roccs Goofy Secure Chat App</h1>
+    <p>You are: <span id="user-id">IDK</span></p>
 
+    <div class="main-box">
+        <div id="users" class="item-container users">
+            <button class="item user">Person 1</button>
+            <button class="item user">Person 2</button>
+            <button class="item user">Person 3</button>
+            <button class="item user">Person 4</button>
+            <button class="item user">Person 5</button>
+            <button class="item user">Person 6</button>
+            <button class="item user">Person 7</button>
+        </div>
 
-    <label for="privkey">Private Key</label><br/>
-    <textarea id="privkey" rows="15" cols="65">-----BEGIN RSA PRIVATE KEY-----
-MIICXQIBAAKBgQDlOJu6TyygqxfWT7eLtGDwajtNFOb9I5XRb6khyfD1Yt3YiCgQ
-WMNW649887VGJiGr/L5i2osbl8C9+WJTeucF+S76xFxdU6jE0NQ+Z+zEdhUTooNR
-aY5nZiu5PgDB0ED/ZKBUSLKL7eibMxZtMlUDHjm4gwQco1KRMDSmXSMkDwIDAQAB
-AoGAfY9LpnuWK5Bs50UVep5c93SJdUi82u7yMx4iHFMc/Z2hfenfYEzu+57fI4fv
-xTQ//5DbzRR/XKb8ulNv6+CHyPF31xk7YOBfkGI8qjLoq06V+FyBfDSwL8KbLyeH
-m7KUZnLNQbk8yGLzB3iYKkRHlmUanQGaNMIJziWOkN+N9dECQQD0ONYRNZeuM8zd
-8XJTSdcIX4a3gy3GGCJxOzv16XHxD03GW6UNLmfPwenKu+cdrQeaqEixrCejXdAF
-z/7+BSMpAkEA8EaSOeP5Xr3ZrbiKzi6TGMwHMvC7HdJxaBJbVRfApFrE0/mPwmP5
-rN7QwjrMY+0+AbXcm8mRQyQ1+IGEembsdwJBAN6az8Rv7QnD/YBvi52POIlRSSIM
-V7SwWvSK4WSMnGb1ZBbhgdg57DXaspcwHsFV7hByQ5BvMtIduHcT14ECfcECQATe
-aTgjFnqE/lQ22Rk0eGaYO80cc643BXVGafNfd9fcvwBMnk0iGX0XRsOozVt5Azil
-psLBYuApa66NcVHJpCECQQDTjI2AQhFc1yRnCU/YgDnSpJVm1nASoRUnU8Jfm3Oz
-uku7JUXcVpt08DFSceCEX9unCuMcT72rAQlLpdZir876
------END RSA PRIVATE KEY-----</textarea><br/>
-    <label for="pubkey">Public Key</label><br/>
-    <textarea id="pubkey" rows="15" cols="65">-----BEGIN PUBLIC KEY-----
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDlOJu6TyygqxfWT7eLtGDwajtN
-FOb9I5XRb6khyfD1Yt3YiCgQWMNW649887VGJiGr/L5i2osbl8C9+WJTeucF+S76
-xFxdU6jE0NQ+Z+zEdhUTooNRaY5nZiu5PgDB0ED/ZKBUSLKL7eibMxZtMlUDHjm4
-gwQco1KRMDSmXSMkDwIDAQAB
------END PUBLIC KEY-----</textarea><br/>
-    <label for="input">Text to encrypt:</label><br/>
-    <textarea id="input" name="input" type="text" rows=4 cols=70>This is a test!</textarea><br/>
-    <input id="testme" type="button" value="Test Me!!!" /><br/>
+        <div id="mail-div" class="item-container mails">
+            <div id="mails" class="item-container mail-list">
+                <div class="item mail">Hallo 1</div>
+                <div class="item mail">Hallo 2</div>
+                <div class="item mail">Hallo 3</div>
+                <div class="item mail">Hallo 4</div>
+                <div class="item mail">Hallo 5</div>
+                <div class="item mail">Hallo 6</div>
+                <div class="item mail">Hallo 7</div>
 
+            </div>
+            <div id="message-input" class="mail-input">
+                <textarea class="input-msg" placeholder="Enter a Message"></textarea>
+                <button class="send-msg">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/env.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/socketStuff.js"></script>
     <script src="/calc/public_key.js"></script>
+    <script src="js/encryptionStuff.js"></script>
+    <script src="js/localStorageStuff.js"></script>
+    <script src="js/serverCommunication.js"></script>
     <script src="index.js"></script>
 </body>
 </html>

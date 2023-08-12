@@ -72,21 +72,17 @@ app.get('/*', (req, res) => {
 });
 
 
-
-
-const sessionStuff = require("./yesServer/sessionStuff.js");
-sessionStuff.initApp(app, io);
-
 const dbStuff = require("./yesServer/simpleDB.js");
 
-const loginManager = require("./yesServer/loginHandling");
-loginManager.initApp(app, io, sessionStuff, dbStuff);
+const encryptionStuff = require("./yesServer/encryptionStuff.js");
+const keyPath = __dirname + "/data/";
+encryptionStuff.initApp(keyPath+"private-key.txt", keyPath+"public-key.txt");
 
 const registerManager = require("./yesServer/registerHandling");
-registerManager.initApp(app, io, sessionStuff, dbStuff);
+registerManager.initApp(encryptionStuff, app, io, dbStuff);
 
 const shell = require("./yesServer/shell");
-shell.initApp(sessionStuff, dbStuff, loginManager, registerManager, calcServiceManager);
+shell.initApp(dbStuff, registerManager, calcServiceManager);
 
 server.listen(80, () => {
     console.log('listening on *:80');

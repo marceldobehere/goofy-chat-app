@@ -1,5 +1,3 @@
-/*make a simple dark theme*/
-
 body
 {
     background-color: #000;
@@ -24,3 +22,138 @@ button
     color: #fff;
     font-family: 'Roboto', sans-serif;
 }
+
+h1
+{
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.main-box
+{
+    position: absolute;
+    top: 100px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    overflow: auto;
+}
+
+.users
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20%;
+    height: 100%;
+
+    background-color: #102030;
+}
+
+.mails
+{
+    position: absolute;
+    top: 0;
+    left: 20%;
+    width: 80%;
+    height: 100%;
+
+    background-color: #101030;
+}
+
+.item-container
+{
+
+}
+
+
+.mail-list
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    bottom: 10%;
+
+    overflow-y: scroll;
+}
+
+.mail-input
+{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10%;
+
+    background-color: gray;
+}
+
+
+.item
+{
+    display: block;
+    border: 1px solid black;
+    width: calc(100% - 10px);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom:10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user
+{
+    color: antiquewhite;
+    background-color: #101030;
+}
+
+.user:hover
+{
+    background-color: #154060;
+}
+
+.mail
+{
+    color: floralwhite;
+    background-color: #151540;
+}
+
+
+.input-msg
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 20%;
+    bottom: 0px;
+
+    background-color: black;
+    resize: none;
+    border: 1px solid black;
+}
+
+.input-msg:focus
+{
+    outline: none !important;
+    border: 1px solid gray;
+}
+
+.send-msg
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 80%;
+    bottom: 0px;
+
+    background-color: #254060;
+    border: 1px solid black;
+}
+
+.send-msg:hover
+{
+    background-color: #356080;
+}
+
