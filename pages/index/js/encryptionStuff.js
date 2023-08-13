@@ -1,9 +1,6 @@
 var generateKeys = function ()
 {
-    var sKeySize = $('#key-size').attr('data-value');
-    var keySize = parseInt(sKeySize);
-
-    var crypt = new JSEncrypt({default_key_size: keySize});
+    var crypt = new JSEncrypt();
     crypt.getKey();
 
     return {"public": crypt.getPublicKey(), "private": crypt.getPrivateKey()};
