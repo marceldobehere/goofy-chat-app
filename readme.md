@@ -10,6 +10,10 @@ So feel free to experiment with it, but don't expect it to be perfect.
 
 
 
+![test](/images/yes.png)
+
+
+
 ## How to use the website/app
 1. Go to the website (either hosted by me (not yet), by someone else or locally)
 2. Read your number/id
