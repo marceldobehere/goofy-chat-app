@@ -9,10 +9,6 @@ io.setMaxListeners(1000);
 
 const calcServiceDict = {};
 
-const calcServiceManager = require('./yesServer/calcServiceManager.js');
-calcServiceManager.initStuff(__dirname, calcServiceDict);
-calcServiceManager.reloadAllCalcServices();
-
 
 app.get('/', (req, res) => {
     res.redirect('/index/index.html');
@@ -71,6 +67,15 @@ app.get('/*', (req, res) => {
     res.sendFile(__dirname + url);
 });
 
+// if /data folder doesnt exist, create it
+const fs = require('fs');
+if (!fs.existsSync(__dirname + "/data"))
+{
+    fs.mkdirSync(__dirname + "/data");
+
+    // add empty users.json
+    fs.writeFileSync(__dirname + "/data/users.json", "[]");
+}
 
 const dbStuff = require("./yesServer/simpleDB.js");
 
@@ -87,8 +92,14 @@ registerManager.initApp(encryptionStuff, app, io, dbStuff, socketSessionStuff);
 const mailManager = require("./yesServer/mailHandling");
 mailManager.initApp(encryptionStuff, app, io, dbStuff, socketSessionStuff);
 
+const calcServiceManager = require('./yesServer/calcServiceManager.js');
+calcServiceManager.initStuff(__dirname, calcServiceDict);
+calcServiceManager.reloadAllCalcServices();
+
 const shell = require("./yesServer/shell");
 shell.initApp(dbStuff, registerManager, calcServiceManager);
+
+
 
 server.listen(80, () => {
     console.log('listening on *:80');

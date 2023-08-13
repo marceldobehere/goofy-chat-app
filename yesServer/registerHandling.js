@@ -16,10 +16,12 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
     dbStuff = _dbStuff;
 
     io.on('disconnect', (socket) => {
+        console.log("S> Disconnect");
         socketSessionStuff.delete(socket);
     });
 
     io.on('connection', (socket) => {
+        console.log("S> Connect");
         socket.on('login', (obj1) => {
             console.log("> Login");
             let obj = enc.receiveObj(obj1);
@@ -28,7 +30,7 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
 
             if (action == "init")
             {
-                console.log("  > Init");
+                console.log("R> Init");
 
                 let clientPubKey = obj["public-key"];
                 //console.log(`> Client public key: ${clientPubKey}`);
@@ -53,7 +55,7 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
                 return;
             }
             else if (action == "confirm") {
-                console.log("  > Confirm");
+                console.log("R> Confirm");
                 //console.log(obj);
 
                 let session = socketSessionStuff.getSessionFromSocket(socket);

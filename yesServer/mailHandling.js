@@ -26,7 +26,7 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
 
     io.on('connection', (socket) => {
         socket.on('mail', (obj1) => {
-            console.log("> Mail");
+            //console.log("> Mail");
             let obj = enc.receiveObj(obj1);
             //console.log(obj);
             let action = obj["action"];
@@ -34,7 +34,7 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
 
             if (action == "req-pub-key")
             {
-                console.log("  > Request public key");
+                console.log("M> Request public key");
                 let session = socketSessionStuff.getSessionFromSocket(socket);
                 if (!session)
                 {
@@ -58,7 +58,7 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
             }
             else if (action == "send")
             {
-                console.log("  > Send Mail");
+                console.log("M> Send Mail");
                 //console.log(obj);
 
                 let session = socketSessionStuff.getSessionFromSocket(socket);

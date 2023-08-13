@@ -7,6 +7,17 @@ let _privateKey;
 
 function initApp(privateKeyPath, publicKeyPath)
 {
+    if (!fs.existsSync(privateKeyPath) || !fs.existsSync(publicKeyPath))
+    {
+        console.log('> Generating RSA keys');
+        const jsEncrypt = new JSEncrypt();
+        jsEncrypt.getKey();
+        fs.writeFileSync(privateKeyPath, jsEncrypt.getPrivateKey());
+        fs.writeFileSync(publicKeyPath, jsEncrypt.getPublicKey());
+        console.log('> Keys generated');
+        console.log();
+    }
+
     _privateKey = fs.readFileSync(privateKeyPath, 'utf8');
     _publicKey = fs.readFileSync(publicKeyPath, 'utf8');
 
