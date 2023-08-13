@@ -91,7 +91,7 @@ h1
     top: 0;
     left: 0;
     width: 100%;
-    bottom: 10%;
+    bottom: 60px;
 
     overflow-y: scroll;
 }
@@ -102,7 +102,7 @@ h1
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 10%;
+    height: 60px;
 
     background-color: gray;
 }
@@ -198,11 +198,11 @@ h1
 .side-left
 {
     text-align: left;
-    color: floralwhite;
+    color: #f07050;
 }
 
 .side-right
 {
-    text-align: right;
-    color: whitesmoke;
+    text-align: left;
+    color: #c0d0f0;
 }
