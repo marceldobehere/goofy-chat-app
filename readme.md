@@ -91,7 +91,7 @@ Idk
 ## So is this actually 100% secure?
 Well it's complicated.
 
-(This is going to be a lot of text, so If you want you can skip to the [TL;DR](#takeaways--tldr-))
+(This is going to be a lot of text, so If you want you can skip to the [TL;DR](#takeaways-tldr))
 
 Realistically if a person that you trust is hosting it, then yes.
 But in the current state, it is possible to set up a malicious server that will circumvent the encryption.
