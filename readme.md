@@ -243,6 +243,7 @@ So that is not too likely. Still a possibility though!
 - To be able to trust the end-to-end encryption being actually between you and the correct person, you should really exchange public keys.
 
   - The easiest way would be by exchanging them on a different and reliable/secure platform or in real life. (For example, possibly the platform you exchanged user-ids on.)
+  - Or by for example creating two accounts on different networks, starting a chat and cross checking the ids.
 
   - If that is not a viable option, and you are probably not too much of a wanted target on the server, you could try sending a checksum in a hidden way. (Once I implement it, I will probably add a guide on how you would do that)
 
