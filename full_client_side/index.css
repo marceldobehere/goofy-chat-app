@@ -3,6 +3,7 @@ body
     background-color: #000;
     color: #fff;
     font-family: 'Roboto', sans-serif;
+    font-size: 14px;
 }
 
 /*make text area also dark mode*/
@@ -35,7 +36,7 @@ button
 
 h1
 {
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bold;
     text-align: center;
 }
@@ -59,8 +60,11 @@ pre
 
 .title-info
 {
-    display: inline-block;
-    margin: 5px;
+    display: flex;
+    margin: 0px 8px 0px 8px;
+    height: 35px;
+    align-items: center;
+    font-size: 20px;
 }
 
 .float-left
@@ -89,7 +93,7 @@ pre
     top: 0;
     left: 0;
     width: 20%;
-    bottom: 10%;
+    bottom: 60px;
 
     background-color: #102030;
 }
@@ -97,7 +101,7 @@ pre
 #user-add
 {
     position: absolute;
-    top: 90%;
+    height: 60px;
     left: 0;
     width: 20%;
     bottom: 0%;

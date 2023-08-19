@@ -90,8 +90,18 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
                     from: usr["userId"],
                     "public-key": usr["public-key"], // this is the public key of the sender
                     mail: obj["mail"],
+                    type: obj["type"],
                     date: new Date()
                 };
+
+                let mailSize = JSON.stringify(mail).length;
+                //console.log(mailSize);
+                if (mailSize > 100000)
+                {
+                    socket.emit("mail", enc.sendObj({action: action, error: "Mail Size is over 100KB"}, clientPubKey));
+                    console.log(`> Mail size is over 100KB (${mailSize})`);
+                    return;
+                }
 
                 globalMailList.push(mail);
 
@@ -184,7 +194,7 @@ function sendAllMailsPossible()
         for (let mail of mails)
         {
             //console.log("Sending mail to " + usr["userId"]);
-            socket.emit("mail", enc.sendObj({action: "rec", "mail": mail["mail"], "from": mail["from"], "public-key": mail["public-key"]}, session["public-key"]));
+            socket.emit("mail", enc.sendObj({action: "rec", "mail": mail["mail"], "from": mail["from"], type:mail["type"], "public-key": mail["public-key"]}, session["public-key"]));
         }
     }
 

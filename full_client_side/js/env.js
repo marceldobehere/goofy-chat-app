@@ -12,3 +12,6 @@ if (!ENV_SERVER_ADDRESS)
 }
 
 var CURRENT_USER_ID = 0;
+
+
+var ENV_AUTOLOAD_IMAGES = false;

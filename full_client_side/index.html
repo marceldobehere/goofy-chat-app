@@ -10,9 +10,9 @@
 <body>
     <a target="_blank" href="https://github.com/marceldobehere/goofy-chat-app"><h1>Roccs Goofy Secure Chat App</h1></a>
     <div>
-        <p class="title-info float-left">You are: <span id="user-id">IDK</span></p>
+        <p class="title-info float-left">You are:&nbsp;<span id="user-id">IDK</span></p>
         <button class="title-info float-right" onclick="mainMenuOpen()">Menu</button>
-        <p class="title-info float-right">Server status: <span id="server-status" class="server-offline">offline</span></p>
+        <p class="title-info float-right">Server status:&nbsp;<span id="server-status" class="server-offline">offline</span></p>
     </div>
 
     <div class="main-box">
@@ -23,7 +23,7 @@
             <div id="mails" class="item-container mail-list" oncontextmenu="chatRightClick(event);return false;" onscroll="chatScroll()">
             </div>
             <div class="mail-input">
-                <textarea onkeydown="msgKeyPressed(event);" id="message-input" class="input-msg" placeholder="Enter a Message"></textarea>
+                <textarea onpaste="imagePastedInTextArea(event)" onkeydown="msgKeyPressed(event);" id="message-input" class="input-msg" placeholder="Enter a Message"></textarea>
                 <button class="send-msg" onclick="messageSend()">Send</button>
             </div>
         </div>
@@ -51,10 +51,6 @@
 
             <p>List of Users and their public keys</p>
             <div class="main-menu-user-list" id="main-menu-user-list">
-                <div class="main-menu-user-list-user">
-                    <p>User 1</p>
-                    <pre>TEST</pre>
-                </div>
             </div>
             <br>
 

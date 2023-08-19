@@ -243,6 +243,18 @@ function chatScroll()
     }
 }
 
+function isImageValid(src) {
+    // Create new offscreen image to test
+    var image_new = new Image();
+    image_new.src = src;
+    // Get accurate measurements from that.
+    if ((image_new.width>0)&&(image_new.height>0)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 let lastShownId = -1;
 let lastScrollY = 0;
 let newMsgCount = 0;
@@ -283,10 +295,41 @@ function showMailsForUser(user)
         let mailThing = mails[i];
         let mail = mailThing["mail"];
         let side = mailThing["side"];
+        let mailType = mailThing["type"];
+        if (!mailType)
+            mailType = "text";
 
         let mailDiv = document.createElement("div");
         mailDiv.className = `item mail side-${side} `;
-        mailDiv.innerText = mail;
+        if (mailType == "text")
+            mailDiv.innerText = mail;
+        else if (mailType == "image")
+        {
+            if (ENV_AUTOLOAD_IMAGES)
+            {
+                let img = document.createElement("img");
+                img.src = mail;
+                img.oncontextmenu = (event) =>
+                {
+                    event.stopPropagation();
+                    return true;
+                };
+
+
+                img.style.display = "block";
+                if (side == "left")
+                    img.style.marginRight = "max";
+                else
+                    img.style.marginLeft = "auto";
+                mailDiv.append(img);
+            }
+            else
+            {
+                mailDiv.innerText = `<NOT LOADED IMAGE>`;
+            }
+        }
+        else
+            mailDiv.innerText = `<${mailType}> ${mail}`;
 
         if (tUnread > 0)
         {
@@ -375,7 +418,7 @@ function moveKeyToTopInObject(key, obj)
 }
 
 
-function addRecMail(from, pubKey, mail)
+function addRecMail(from, pubKey, data, type)
 {
     if (!MAILS[from])
         MAILS[from] = {nickname: "", "public-key":pubKey, mails: [], unread: 0};
@@ -395,7 +438,7 @@ function addRecMail(from, pubKey, mail)
     }
 
     MAILS[from]["unread"]++;
-    MAILS[from]["mails"].push({side: "left", mail: mail});
+    MAILS[from]["mails"].push({side: "left", mail: data, type:type});
     //lastShownId = -1;
 
     MAILS = moveKeyToTopInObject(from, MAILS);
@@ -410,7 +453,7 @@ function addRecMail(from, pubKey, mail)
 }
 
 
-function addSentMail(from, pubKey, mail)
+function addSentMail(from, pubKey, data, type)
 {
     if (!MAILS[from])
         MAILS[from] = {nickname: "",  "public-key":pubKey, mails: [], unread: 0};
@@ -430,7 +473,7 @@ function addSentMail(from, pubKey, mail)
     }
 
 
-    MAILS[from]["mails"].push({side: "right", mail: mail});
+    MAILS[from]["mails"].push({side: "right", mail: data, type:type});
     MAILS = moveKeyToTopInObject(from, MAILS);
     saveEncryptedObject('MAILS', MAILS);
 
@@ -452,11 +495,12 @@ onReceiveEncrypted('mail', (obj) => {
     let mailEnc = obj["mail"];
     let mail = rsaStringListIntoString(mailEnc, ENV_CLIENT_PRIVATE_KEY);
     let fromPubKey = obj["public-key"];
+    let type = obj["type"];
 
     //console.log(`FROM: ${from}`);
     //console.log(`MAIL: ${mail}`);
 
-    addRecMail(from, fromPubKey, mail);
+    addRecMail(from, fromPubKey, mail, type);
 
     refresh();
 });
@@ -511,6 +555,48 @@ function resetAllMails()
 
 
 
+async function doMailSending(user, data, type)
+{
+    if (!user)
+        user = CURRENT_USER_ID;
+
+    if (!user || !data || !type)
+        return;
+
+    let replyPromise;
+    let reply;
+
+    // send the server your public key
+    replyPromise = createOnReceivePromise('mail');
+    sendEncrypted('mail', {"action":"req-pub-key", "user-id": user});
+    reply = await replyPromise;
+
+    if (reply["error"])
+    {
+        alert(`Error: ${reply["error"]}`);
+        return;
+    }
+
+    let pubKey = reply["public-key"];
+    let enc = StringIntoRsaStringList(data, pubKey);
+
+    replyPromise = createOnReceivePromise('mail');
+    sendEncrypted('mail', {action:"send", "to": user, "mail": enc, type:type});
+
+    reply = await replyPromise;
+
+    if (reply["error"])
+    {
+        alert(`Error: ${reply["error"]}`);
+        return;
+    }
+
+    addSentMail(user, pubKey, data, type);
+    console.log('> MAIL SENT!');
+}
+
+
+
 let messageSending = 0;
 async function messageSend()
 {
@@ -530,44 +616,8 @@ async function messageSend()
     let message = document.getElementById('message-input').value;
     document.getElementById('message-input').value = "";
 
-    if (!user || !message)
-    {
-        messageSending = 0;
-        return;
-    }
+    await doMailSending(user, message, "text");
 
-    let replyPromise;
-    let reply;
-
-    // send the server your public key
-    replyPromise = createOnReceivePromise('mail');
-    sendEncrypted('mail', {"action":"req-pub-key", "user-id": user});
-    reply = await replyPromise;
-
-    if (reply["error"])
-    {
-        alert(`Error: ${reply["error"]}`);
-        messageSending = 0;
-        return;
-    }
-
-    let pubKey = reply["public-key"];
-    let enc = StringIntoRsaStringList(message, pubKey);
-
-    replyPromise = createOnReceivePromise('mail');
-    sendEncrypted('mail', {action:"send", "to": user, "mail": enc});
-
-    reply = await replyPromise;
-
-    if (reply["error"])
-    {
-        alert(`Error: ${reply["error"]}`);
-        messageSending = 0;
-        return;
-    }
-
-    addSentMail(user, pubKey, message);
-    console.log('> MAIL SENT!');
     messageSending = 0;
 }
 
@@ -584,9 +634,6 @@ function msgKeyPressed(event)
 
 
 refresh();
-//addRecMail('4840604893320', 'mail1');
-//addRecMail('6460427106832', 'mail44');
-//addSentMail('user5', 'testo');
 
 if (localStorage.getItem('MAILS'))
     console.log(`MAIL SIZE: ${localStorage.getItem('MAILS').length}`)
@@ -772,4 +819,52 @@ function updateMainMenu()
 function openCrossCheckMenu()
 {
     alert('Not implemented yet :(');
+}
+
+
+
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+});
+
+async function imagePastedInTextArea(event)
+{
+    console.log("PASTE");
+    const dT = event.clipboardData || window.clipboardData;
+    const file = dT.files[0];
+
+    // check for potentially an image link
+    if (!file)
+    {
+        let text = dT.getData('text');
+        if (isImageValid(text))
+        {
+            if (!confirm(`Send image?`))
+                return;
+
+            await doMailSending(undefined, text, "image");
+
+            // clear input box
+            document.getElementById('message-input').value = "";
+            return;
+        }
+    }
+
+
+    if (!file)
+        return;
+
+    console.log(file);
+    console.log(file.size);
+    let imgData = await toBase64(file);
+    console.log(imgData);
+
+    // ask if you want to send the image
+    if (!confirm(`Send image?`))
+        return;
+
+    await doMailSending(undefined, imgData, "image");
 }
