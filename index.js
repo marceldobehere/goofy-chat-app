@@ -1,8 +1,50 @@
 const express = require('express');
 const app = express();
 const http = require('http');
-var cors = require('cors')
-const server = http.createServer(app);
+const https = require('https');
+var cors = require('cors');
+const fs = require('fs');
+
+
+
+// if /data folder doesnt exist, create it
+
+if (!fs.existsSync(__dirname + "/data"))
+{
+    fs.mkdirSync(__dirname + "/data");
+
+    // add empty users.json
+    fs.writeFileSync(__dirname + "/data/users.json", "[]");
+}
+
+const USE_HTTPS = true;
+
+if (USE_HTTPS && !fs.existsSync(__dirname + "/data/ssl"))
+{
+    console.log("SSL FOLDER DOESNT EXIST");
+    console.log("> Either host the server using http (set USE_HTTPS to false) or create the ssl keys.");
+    console.log();
+    console.log("To create the ssl keys, open a terminal in the data folder and run the following commands:");
+    console.log("mkdir ssl");
+    console.log("cd ssl");
+    console.log("openssl genrsa -out key.pem");
+    console.log("openssl req -new -key key.pem -out csr.pem");
+    console.log("openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem");
+    return;
+}
+
+
+var server;
+if (!USE_HTTPS)
+    server = http.createServer(app);
+else
+    server = https.createServer(
+        {
+            key: fs.readFileSync(__dirname + "/data/ssl/key.pem"),
+            cert: fs.readFileSync(__dirname + "/data/ssl/cert.pem"),
+        },
+        app);
+
 const { Server } = require("socket.io");
 const io = new Server(server);
 
@@ -69,15 +111,6 @@ app.get('/*', cors(), (req, res) => {
     res.sendFile(__dirname + url);
 });
 
-// if /data folder doesnt exist, create it
-const fs = require('fs');
-if (!fs.existsSync(__dirname + "/data"))
-{
-    fs.mkdirSync(__dirname + "/data");
-
-    // add empty users.json
-    fs.writeFileSync(__dirname + "/data/users.json", "[]");
-}
 
 const dbStuff = require("./yesServer/simpleDB.js");
 
