@@ -94,6 +94,7 @@ async function getUserId()
 async function doServerInit()
 {
     updateMainMenuUserList();
+    updateMainMenu();
 
     setTimeout(updateServerStatus, 100);
 
@@ -166,8 +167,6 @@ async function updateServerStatus()
     let statusDiv = document.getElementById('server-status');
     statusDiv.innerText = status ? "online" : "offline";
     statusDiv.className = status ? "server-online" : "server-offline";
-
-    updateMainMenu();
 }
 
 doServerInit();
@@ -652,6 +651,8 @@ async function addUserClick() {
 
 function mainMenuOpen()
 {
+    updateMainMenu();
+
     // add menu-shown class to main-menu if it doesnt have it and remove menu-hidden class if it has it
     let mainMenu = document.getElementById('main-menu');
     mainMenu.className = mainMenu.className.replace(' menu-hidden', '');

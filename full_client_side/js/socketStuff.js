@@ -5,6 +5,9 @@ var connectionOptions =  {
     "transports" : ["websocket", "polling"]
 };
 
+if (ENV_SERVER_ADDRESS.startsWith("https://"))
+    connectionOptions["secure"] = true;
+
 var socket = io(ENV_SERVER_ADDRESS, connectionOptions);
 
 
