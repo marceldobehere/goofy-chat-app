@@ -93,6 +93,8 @@ async function getUserId()
 
 async function doServerInit()
 {
+    updateMainMenuUserList();
+
     setTimeout(updateServerStatus, 100);
 
     setInterval(updateServerStatus, 1000);

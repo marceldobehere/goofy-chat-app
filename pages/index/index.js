@@ -540,3 +540,6 @@ async function addUserClick() {
     saveEncryptedObject('MAILS', MAILS);
     refresh();
 }
+
+alert("Yo, you should not be using the client served by the server. Please open the file locally or use the one hosted on the github");
+window.location.href = "https://marceldobehere.github.io/goofy-chat-app/full_client_side/";

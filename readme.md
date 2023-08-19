@@ -60,6 +60,7 @@ Idk
 - Make an exporter and importer for chats and or private/public keys
 - Make the server not crash sometimes when malformed requests happen smh
 - Add a text size limit
+- Remove the server served side
 
 ## TODO (security)
 - Set default size of the RSA keys to like 2048 bit or something
