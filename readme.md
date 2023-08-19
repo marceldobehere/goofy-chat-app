@@ -15,10 +15,11 @@ So feel free to experiment with it, but don't expect it to be perfect.
 
 
 ## How to use the website/app
-1. Go to the website (either hosted by me (not yet), by someone else or locally)
-2. Read your number/id
-3. Add other people
-4. Chat with em
+1. Visit the client [here](https://marceldobehere.github.io/goofy-chat-app/full_client_side/). (Or open the full_client_side folder locally)
+2. Connect to a server. (Either host a local one, connect to mine (not hosting one yet), or join someone else's server)
+3. Read your number/id
+4. Add other people
+5. Chat with em
 
 ## Controls
 
@@ -47,24 +48,20 @@ Idk
 ## TODO
 (There is a bit of stuff, since I just made it in like 2 days lmao)
 - Add blocking people
-- Add a status bar for the server, to see if it is online
 - Add notification sounds
 - Add a timeout for spam messages and registering
-- Check if auto-deletion of messages works
-- Add deleting your account
-- Add auto deleting after 1 month of inactivity
+- Check if auto timeout/deletion of messages works
+- Make deleting your account send that request to the server too
+- Add auto deleting profiles after 4 months of inactivity or something
 - Add saving the pending mails to a file in case of a power-off
 - Add caching to the goofy json database lmao
 - Improve UI
-- Make a local site that dynamically loads in the content from the server and stores the data locally
-- Host it on my domain
+- Host a server instance on my domain somehow. (Maybe add functionality to the client to get the correct url)
 - Make an exporter and importer for chats and or private/public keys
 - Make the server not crash sometimes when malformed requests happen smh
 - Add a text size limit
 
 ## TODO (security)
-- Add client side log of public keys
-- Add automatic discrepancy checker for public keys
 - Set default size of the RSA keys to like 2048 bit or something
 - Add a goofy external verification of public key mechanism
 
@@ -82,8 +79,6 @@ Idk
 ## Credits
 - [JS ENCRYPT](https://github.com/travist/jsencrypt)
 - [Socket.io](https://socket.io)
-
-
 
 
 
