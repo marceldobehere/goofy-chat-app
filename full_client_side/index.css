@@ -17,6 +17,14 @@ textarea
 
 /*make the buttons dark mode*/
 
+a
+{
+    background-color: #000;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    text-decoration: none;
+}
+
 button
 {
     background-color: #000;
