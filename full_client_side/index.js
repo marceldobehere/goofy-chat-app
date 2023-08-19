@@ -699,6 +699,20 @@ function importProfile()
     alert('Not implemented yet :(');
 }
 
+function deleteProfile()
+{
+    if (!confirm("Are you sure you want to delete everything?"))
+        return;
+
+    if (!confirm("Ya really sure??"))
+        return;
+
+    resetKeys();
+    MAILS = {};
+    saveEncryptedObject('MAILS', MAILS);
+    location.reload();
+}
+
 function updateMainMenuUserList()
 {
     /*
