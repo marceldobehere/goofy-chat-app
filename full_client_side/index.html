@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roccs Goofy Secure Chat App</title>
+    <link rel="stylesheet" href="index.css">
+    <meta charset="utf-8">
+
+    <script src="shared/js/jsencrypt.min.js"></script>
+</head>
+<body>
+    <h1>Roccs Goofy Secure Chat App</h1>
+    <div>
+        <p class="title-info float-left">You are: <span id="user-id">IDK</span></p>
+        <button class="title-info float-right" onclick="mainMenuOpen()">Menu</button>
+        <p class="title-info float-right">Server status: <span id="server-status" class="server-offline">offline</span></p>
+    </div>
+
+    <div class="main-box">
+        <div id="users" class="item-container users"></div>
+        <button id="user-add" onclick="addUserClick()">Add User</button>
+
+        <div id="mail-div" class="item-container mails">
+            <div id="mails" class="item-container mail-list" oncontextmenu="chatRightClick(event);return false;" onscroll="chatScroll()">
+            </div>
+            <div class="mail-input">
+                <textarea onkeydown="msgKeyPressed(event);" id="message-input" class="input-msg" placeholder="Enter a Message"></textarea>
+                <button class="send-msg" onclick="messageSend()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-menu" class="menu blur-bg menu-hidden" onclick="mainMenuClose();event.stopPropagation();">
+        <div class="actual-menu" onclick="event.stopPropagation();">
+            <div style="height: 40px;">
+                <button class="title-info float-right" onclick="mainMenuClose()">Close Menu</button>
+                <h1>Menu</h1>
+            </div>
+
+            <p>Your Public Key: <pre id="main-menu-client-public-key">TEST</pre></p>
+            <p>Server Public Key: <pre id="main-menu-server-public-key">TEST</pre></p>
+            <p style="display: inline-block;">Current Server address: <span id="main-menu-server-address">TEST</span></p>
+            <button onclick="serverAddressChange()">Change Server Address</button>
+            <br><br>
+
+
+            <button onclick="exportProfile()">Export Profile and Data</button>&nbsp;
+            <button onclick="importProfile()">Import Profile and Data</button>
+            <br><br>
+
+
+            <p>List of Users and their public keys</p>
+            <div class="main-menu-user-list" id="main-menu-user-list">
+                <div class="main-menu-user-list-user">
+                    <p>User 1</p>
+                    <pre>TEST</pre>
+                </div>
+            </div>
+            <br>
+
+            <button onclick="openCrossCheckMenu()">Open Obfuscated Cross-Check Public Key Menu</button>&nbsp;
+            <br><br>
+
+
+
+        </div>
+    </div>
+
+    <script src="js/localStorageStuff.js"></script>
+    <script src="js/env.js"></script>
+    <script src="shared/js/socket_io.js"></script>
+    <script src="js/socketStuff.js"></script>
+    <script src="js/encryptionStuff.js"></script>
+    <script src="js/serverCommunication.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

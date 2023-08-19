@@ -7,6 +7,11 @@ const publicKeyPath = path.join(__dirname, '../data/public-key.txt');
 let publicKey = fs.readFileSync(publicKeyPath, 'utf8');
 
 const getJsFileWithServerPublicKey = (params) =>
-`var ENV_SERVER_PUBLIC_KEY = \`${publicKey}\`;`;
+{
+    if (params["set-var"] == "true")
+        return `var ENV_SERVER_PUBLIC_KEY = \`${publicKey}\`;`;
+    else
+        return publicKey;
+}
 
 module.exports = getJsFileWithServerPublicKey;

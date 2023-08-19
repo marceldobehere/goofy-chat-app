@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const http = require('http');
+var cors = require('cors')
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
@@ -14,7 +15,7 @@ app.get('/', (req, res) => {
     res.redirect('/index/index.html');
 });
 
-app.get('/*', (req, res) => {
+app.get('/*', cors(), (req, res) => {
     let url = req.url;
     //console.log(`URL START: \"${url}\"`);
     if (url.startsWith('/shared/'))
@@ -46,6 +47,7 @@ app.get('/*', (req, res) => {
 
         //console.log(`PARAMS: ${JSON.stringify(params)}`);
         let result = calcService(params);
+        res.bodyUsed = true;
         res.send(result);
         return;
     }

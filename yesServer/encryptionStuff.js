@@ -108,7 +108,16 @@ function sendObj(obj, publicKey)
 function receiveObj(strList)
 {
     let bruh = rsaStringListIntoString(strList, _privateKey);
-    return JSON.parse(bruh);
+    try
+    {
+        return JSON.parse(bruh);
+    }
+    catch (e)
+    {
+        console.log(`> Error while parsing JSON: ${e}`);
+        return {};
+    }
+
 
     // let dec = decryptStr(str);
     // if (dec == "")

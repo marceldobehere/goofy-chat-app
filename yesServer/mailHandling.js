@@ -29,6 +29,13 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
             //console.log("> Mail");
             let obj = enc.receiveObj(obj1);
             //console.log(obj);
+
+            if (!obj)
+            {
+                console.log("> Error while parsing JSON");
+                return;
+            }
+
             let action = obj["action"];
 
 
@@ -81,6 +88,7 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
                 {
                     to: obj["to"],
                     from: usr["userId"],
+                    "public-key": usr["public-key"], // this is the public key of the sender
                     mail: obj["mail"],
                     date: new Date()
                 };
@@ -176,7 +184,7 @@ function sendAllMailsPossible()
         for (let mail of mails)
         {
             //console.log("Sending mail to " + usr["userId"]);
-            socket.emit("mail", enc.sendObj({action: "rec", "mail": mail["mail"], "from": mail["from"]}, session["public-key"]));
+            socket.emit("mail", enc.sendObj({action: "rec", "mail": mail["mail"], "from": mail["from"], "public-key": mail["public-key"]}, session["public-key"]));
         }
     }
 
