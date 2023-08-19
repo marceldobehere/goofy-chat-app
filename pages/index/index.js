@@ -1,3 +1,7 @@
+alert("Yo, you should not be using the client served by the server. Please open the file locally or use the one hosted on the github");
+window.location.href = "https://marceldobehere.github.io/goofy-chat-app/full_client_side/";
+
+
 if (!ENV_SERVER_PUBLIC_KEY)
 {
     alert('something went wrong :(');
@@ -482,7 +486,7 @@ refresh();
 //addRecMail('6460427106832', 'mail44');
 //addSentMail('user5', 'testo');
 
-console.log(`MAIL SIZE: ${localStorage.getItem('MAILS').length}`)
+// console.log(`MAIL SIZE: ${localStorage.getItem('MAILS').length}`)
 
 
 
@@ -541,5 +545,3 @@ async function addUserClick() {
     refresh();
 }
 
-alert("Yo, you should not be using the client served by the server. Please open the file locally or use the one hosted on the github");
-window.location.href = "https://marceldobehere.github.io/goofy-chat-app/full_client_side/";

@@ -589,7 +589,9 @@ refresh();
 //addRecMail('6460427106832', 'mail44');
 //addSentMail('user5', 'testo');
 
-console.log(`MAIL SIZE: ${localStorage.getItem('MAILS').length}`)
+if (localStorage.getItem('MAILS'))
+    console.log(`MAIL SIZE: ${localStorage.getItem('MAILS').length}`)
+
 
 
 
@@ -679,7 +681,7 @@ function serverAddressChange()
     if (!addr)
         return;
 
-    if (!addr.startsWith("http://"))
+    if (!addr.startsWith("http://") && !addr.startsWith("https://"))
         addr = "http://" + addr;
 
     if (addr.endsWith("/"))
