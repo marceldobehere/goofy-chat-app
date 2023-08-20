@@ -7,7 +7,7 @@ var MAILS;
 var ENV_SERVER_ADDRESS = loadObject("SERVER_ADDR");
 if (!ENV_SERVER_ADDRESS)
 {
-    ENV_SERVER_ADDRESS = "http://localhost";
+    ENV_SERVER_ADDRESS = "https://localhost:80";
     saveObject("SERVER_ADDR", ENV_SERVER_ADDRESS);
 }
 
