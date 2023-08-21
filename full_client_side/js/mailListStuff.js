@@ -1,6 +1,6 @@
-function chatScroll()
+async function chatScroll()
 {
-    showMailsForUser(CURRENT_USER_ID);
+    await showMailsForUser(CURRENT_USER_ID);
 
     // let mailBox = document.getElementById('mails');
     // let tempLastScrollY = mailBox.scrollHeight - mailBox.scrollTop;
@@ -47,7 +47,26 @@ function clearChatWindow()
     console.log("CLEARING CHAT WINDOW");
 }
 
-function addMailBlock(mailThing, container, bottom)
+async function insertImageYes(mailDiv, img, side)
+{
+    await img.decode();
+
+    img.style.display = "block";
+    if (side == "left")
+        img.style.marginRight = "max";
+    else
+        img.style.marginLeft = "auto";
+    mailDiv.append(img);
+
+
+    //console.log(`> IMG 1: ${img.width}x${img.height}`);
+    let newSize = calculateAspectRatioFit(img.width, img.height, 300, 150);
+    img.width = newSize.width;
+    img.height = newSize.height;
+    //console.log(`> IMG 2: ${img.width}x${img.height}`);
+}
+
+async function addMailBlock(mailThing, container, bottom)
 {
     //console.log(mailThing);
     let mail = mailThing["mail"];
@@ -62,27 +81,64 @@ function addMailBlock(mailThing, container, bottom)
         mailDiv.innerText = mail;
     else if (mailType == "image")
     {
-        if (ENV_AUTOLOAD_IMAGES)
+        let img = document.createElement("img");
+        img.oncontextmenu = (event) =>
         {
-            let img = document.createElement("img");
-            img.src = mail;
-            img.oncontextmenu = (event) =>
-            {
-                event.stopPropagation();
-                return true;
-            };
+            event.stopPropagation();
+            return true;
+        };
 
-
-            img.style.display = "block";
-            if (side == "left")
-                img.style.marginRight = "max";
+        let actuallyAddImage = true;
+        //console.log(mail);
+        if (!ENV_AUTOLOAD_IMAGES)
+        {
+            if (mail["link"])
+                actuallyAddImage = "link";
             else
-                img.style.marginLeft = "auto";
-            mailDiv.append(img);
+                actuallyAddImage = "image";
+        }
+        else if (mail["link"])
+        {
+            if (ENV_AUTOLOAD_LINK_IMAGES)
+            {
+                img.src = getImage(mail["user"], mail["id"]);
+                actuallyAddImage = true;
+            }
+            else
+                actuallyAddImage = "link";
         }
         else
         {
-            mailDiv.innerText = `<NOT LOADED IMAGE>`;
+            img.src = getImage(mail["user"], mail["id"]);
+            actuallyAddImage = true;
+        }
+
+        if (actuallyAddImage == true)
+        {
+            await insertImageYes(mailDiv, img, side);
+        }
+        else
+        {
+            if (actuallyAddImage == "link")
+            {
+                mailDiv.innerText = `<CLICK TO LOAD (${getImage(mail["user"], mail["id"])})>`;
+                mailDiv.onclick = async () =>
+                {
+                    mailDiv.innerText = "";
+                    img.src = getImage(mail["user"], mail["id"]);
+                    await insertImageYes(mailDiv, img, side);
+                }
+            }
+            else
+            {
+                mailDiv.innerText = `<CLICK TO LOAD IMAGE>`;
+                mailDiv.onclick = async () =>
+                {
+                    mailDiv.innerText = "";
+                    img.src = getImage(mail["user"], mail["id"]);
+                    await insertImageYes(mailDiv, img, side);
+                }
+            }
         }
     }
     else
@@ -101,16 +157,16 @@ function addMailBlock(mailThing, container, bottom)
 
 
 let doingScroll = false;
-function showMailsForUser(user)
+async function showMailsForUser(user)
 {
     if (doingScroll)
         return;
     doingScroll = true;
-    _showMailsForUser(user)
+    await _showMailsForUser(user);
     doingScroll = false;
 }
 
-function _showMailsForUser(user)
+async function _showMailsForUser(user)
 {
     CURRENT_USER_ID = 0;
 
@@ -172,7 +228,7 @@ function _showMailsForUser(user)
     for (let i = MSG_BOTTOM_INDEX - 1; i >= 0; i--)
     {
         let aI = mails.length - 1 - i;
-        let mailDiv = addMailBlock(mails[aI], mailBox, true);
+        let mailDiv = await addMailBlock(mails[aI], mailBox, true);
         if (tUnread - i > 0)
             mailDiv.className += "new-mail ";
         if (bottom)
@@ -194,7 +250,7 @@ function _showMailsForUser(user)
 
 
         let aI = mails.length - 1 - MSG_TOP_INDEX;
-        let mailDiv = addMailBlock(mails[aI], mailBox, false);
+        let mailDiv = await addMailBlock(mails[aI], mailBox, false);
         if (tUnread - MSG_TOP_INDEX > 0)
             mailDiv.className += "new-mail ";
         MSG_TOP_INDEX++;
@@ -243,6 +299,8 @@ function chatRightClick(event)
     {
         removeMailsFromUser(user);
         initMailsForUser(user);
+        removeImagesFromUser(user);
+        initImagesForUser(user);
         refresh();
     }
 }

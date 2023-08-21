@@ -6,7 +6,7 @@ var generateKeys = function ()
     return {"public": crypt.getPublicKey(), "private": crypt.getPrivateKey()};
 };
 
-function testKeys()
+function testRsa()
 {
     let testStr1 = 'Hello, world!';
 
@@ -14,19 +14,45 @@ function testKeys()
     encrypt.setPublicKey(ENV_CLIENT_PUBLIC_KEY);
     let encrypted = encrypt.encrypt(testStr1);
 
-    // Decrypt with the private key...
     let decrypt = new JSEncrypt();
     decrypt.setPrivateKey(ENV_CLIENT_PRIVATE_KEY);
     let testStr2 = decrypt.decrypt(encrypted);
 
-    // Now a simple check to see if the round-trip worked.
     if (testStr2 == testStr1)
         return true;
+
+    alert('RSA CHECK FAILED!');
+    return false;
+}
+
+function testAes()
+{
+    let testStr1 = 'Hello, world!';
+
+    let encrypted = CryptoJS.AES.encrypt('Hello, world!', ENV_CLIENT_PRIVATE_KEY);
+
+    let testStr2 = CryptoJS.AES.decrypt(encrypted, ENV_CLIENT_PRIVATE_KEY).toString(CryptoJS.enc.Utf8);
+
+    if (testStr1 == testStr2)
+        return true;
+
+
+    alert('AES CHECK FAILED!');
+    return false;
+}
+
+function testKeys()
+{
+    let work = true;
+    work &= testRsa();
+    work &= testAes();
+
+    if (work)
+        console.log("> Encryption with keys works");
     else
-    {
-        alert('Something went wrong....');
-        return false;
-    }
+        console.log("> Encryption with keys is broken :(");
+
+    return work;
 }
 
 function resetKeys()

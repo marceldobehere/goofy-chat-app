@@ -42,14 +42,24 @@ const toBase64 = file => new Promise((resolve, reject) => {
 });
 
 
-function isImageValid(src) {
+async function isImageValid(src)
+{
     // Create new offscreen image to test
-    var image_new = new Image();
-    image_new.src = src;
-    // Get accurate measurements from that.
-    if ((image_new.width>0)&&(image_new.height>0)){
-        return true;
-    } else {
+    try
+    {
+        let img = new Image();
+        img.src = src;
+
+        await img.decode();
+
+        // Get accurate measurements from that.
+        if (Math.min(img.width,img.height) > 0)
+            return true;
+
+        return false;
+    }
+    catch (e)
+    {
         return false;
     }
 }
@@ -74,4 +84,33 @@ function hashString(str) {
         hash += adder;
 
     return hash;
+}
+
+function getRandomIntInclusive(min, max)
+{
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    for (let i = Math.random() * 25; i >= 0; i--)
+        Math.random();
+
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+
+// https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
+/**
+ * Conserve aspect ratio of the original region. Useful when shrinking/enlarging
+ * images to fit into a certain area.
+ *
+ * @param {Number} srcWidth width of source image
+ * @param {Number} srcHeight height of source image
+ * @param {Number} maxWidth maximum available width
+ * @param {Number} maxHeight maximum available height
+ * @return {Object} { width, height }
+ */
+function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
+
+    var ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+
+    return { width: srcWidth*ratio, height: srcHeight*ratio };
 }

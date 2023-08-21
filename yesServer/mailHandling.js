@@ -96,10 +96,10 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
 
                 let mailSize = JSON.stringify(mail).length;
                 //console.log(mailSize);
-                if (mailSize > 100000)
+                if (mailSize > 500000)
                 {
-                    socket.emit("mail", enc.sendObj({action: action, error: "Mail Size is over 100KB"}, clientPubKey));
-                    console.log(`> Mail size is over 100KB (${mailSize})`);
+                    socket.emit("mail", enc.sendObj({action: action, error: "Mail Size is over 500KB"}, clientPubKey));
+                    console.log(`> Mail size is over 500KB (${mailSize})`);
                     return;
                 }
 

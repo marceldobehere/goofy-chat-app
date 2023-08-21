@@ -29,13 +29,13 @@ async function doServerInit()
     updateMainMenuUserList();
     updateMainMenu();
 
-    await delay(20);
+    await delay(50);
 
     await updateServerStatus();
 
     await delay(10);
 
-    refresh();
+    await refresh();
 
     setInterval(updateServerStatus, 1000);
 }
@@ -51,10 +51,10 @@ doServerInit();
 
 
 
-function refresh()
+async function refresh()
 {
     updateAllUsers();
-    showMailsForUser(CURRENT_USER_ID);
+    await showMailsForUser(CURRENT_USER_ID);
 }
 
 
@@ -66,7 +66,7 @@ onReceiveEncrypted('mailRec', (obj) => {
     if (!obj || obj["action"] != "rec")
         return;
 
-    console.log('MAIL RECEIVED');
+    console.log('> MAIL RECEIVED');
     //console.log(obj);
 
     let from = obj["from"];

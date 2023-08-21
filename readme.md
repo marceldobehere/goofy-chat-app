@@ -81,6 +81,7 @@ Idk
 ## Credits
 - [JS ENCRYPT](https://github.com/travist/jsencrypt)
 - [Socket.io](https://socket.io)
+- [Crypto JS](https://github.com/brix/crypto-js)
 
 
 

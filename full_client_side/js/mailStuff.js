@@ -27,6 +27,39 @@ function _getUserAndCheckForPublicKey(from, pubKey)
     return user;
 }
 
+function addAnyMail(from, mail)
+{
+    if (mail["type"] == "image")
+    {
+        // check if it's an image link or raw data
+        // if link then add the image link thing
+        // if raw data, then add it to the image localstorage object
+        // send a mail with a link to the image localstorage object
+        console.log("> GOT IMG");
+        let id;
+        do
+        {
+            id = getRandomIntInclusive(1000000000, 99999999999999);
+        } while (getImage(from, id))
+        console.log(`ID: ${id}`);
+
+        setImage(from, id, mail["mail"]);
+
+        let isLink = false;
+        // add check for image links
+        if (mail["mail"].startsWith("http://") || mail["mail"].startsWith("https://"))
+            isLink = true;
+
+        mail["mail"] = {link:isLink, user:from, id:id};
+
+        addMailToUser(from, mail);
+    }
+    else
+    {
+        addMailToUser(from, mail);
+    }
+}
+
 function addRecMail(from, pubKey, data, type)
 {
     let user = _getUserAndCheckForPublicKey(from, pubKey);
@@ -34,7 +67,8 @@ function addRecMail(from, pubKey, data, type)
     user["unread"]++;
     setUserInfo(from, user);
 
-    addMailToUser(from, {side: "left", mail: data, type:type});
+    addAnyMail(from, {side: "left", mail: data, type:type});
+
     //lastShownId = -1;
 
     userListMoveUserToTop(from);
@@ -52,7 +86,8 @@ function addSentMail(from, pubKey, data, type)
 {
     let user = _getUserAndCheckForPublicKey(from, pubKey);
 
-    addMailToUser(from, {side: "right", mail: data, type:type});
+    addAnyMail(from, {side: "right", mail: data, type:type});
+    //addMailToUser(from, {side: "right", mail: data, type:type});
     userListMoveUserToTop(from);
 
     newMsgCount++;
@@ -177,7 +212,7 @@ async function imagePastedInTextArea(event)
     if (!file)
     {
         let text = dT.getData('text');
-        if (isImageValid(text))
+        if (await isImageValid(text))
         {
             if (!confirm(`Send image?`))
                 return;
@@ -194,10 +229,10 @@ async function imagePastedInTextArea(event)
     if (!file)
         return;
 
-    console.log(file);
+    //console.log(file);
     console.log(file.size);
     let imgData = await toBase64(file);
-    console.log(imgData);
+    //console.log(imgData);
 
     // ask if you want to send the image
     if (!confirm(`Send image?`))

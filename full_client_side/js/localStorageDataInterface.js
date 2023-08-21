@@ -37,7 +37,7 @@ function removeUser(userId)
     if (_USERS.includes(userId+""))
     {
         _USERS.splice(_USERS.indexOf(userId+""), 1);
-        saveEncryptedObject(`USERS`, _USERS);
+        saveAesEncryptedObject(`USERS`, _USERS);
     }
 }
 
@@ -50,7 +50,7 @@ function addUser(userId)
     if (!_USERS.includes(userId+""))
     {
         _USERS.push(userId+"");
-        saveEncryptedObject(`USERS`, _USERS);
+        saveAesEncryptedObject(`USERS`, _USERS);
     }
 }
 
@@ -62,7 +62,7 @@ function removeUserInfo(userId)
     if (_USERS.includes(userId+""))
     {
         _USERS.splice(_USERS.indexOf(userId+""), 1);
-        saveEncryptedObject(`USERS`, _USERS);
+        saveAesEncryptedObject(`USERS`, _USERS);
     }
 }
 
@@ -86,11 +86,11 @@ function removeImagesFromUser(userId)
 
 function _loadUsers()
 {
-    let users = loadEncryptedObject(`USERS`);
+    let users = loadAesEncryptedObject(`USERS`);
     if (!users)
     {
         users = [];
-        saveEncryptedObject(`USERS`, users);
+        saveAesEncryptedObject(`USERS`, users);
     }
     return users;
 }
@@ -103,13 +103,13 @@ function getAllUsers()
 function setAllUsers(users)
 {
     _USERS = users;
-    saveEncryptedObject(`USERS`, users);
+    saveAesEncryptedObject(`USERS`, users);
 }
 
 function getUserInfo(userId)
 {
     if (!_USER_DATA[userId+""])
-        _USER_DATA[userId+""] = loadEncryptedObject(`USER_${userId}`);
+        _USER_DATA[userId+""] = loadAesEncryptedObject(`USER_${userId}`);
 
     return _USER_DATA[userId+""];
 }
@@ -117,12 +117,12 @@ function getUserInfo(userId)
 function setUserInfo(userId, info)
 {
     _USER_DATA[userId+""] = info;
-    saveEncryptedObject(`USER_${userId}`, info);
+    saveAesEncryptedObject(`USER_${userId}`, info);
 
     if (!_USERS.includes(userId+""))
     {
         _USERS.push(userId+"");
-        saveEncryptedObject(`USERS`, _USERS);
+        saveAesEncryptedObject(`USERS`, _USERS);
     }
 }
 
@@ -144,8 +144,8 @@ function initMailsForUser(userId)
     if (!_MAILS[userId+""])
         _MAILS[userId+""] = [];
 
-    if (!loadEncryptedObject(`MAILS_${userId}`))
-        saveEncryptedObject(`MAILS_${userId}`, _MAILS[userId+""]);
+    if (!loadAesEncryptedObject(`MAILS_${userId}`))
+        saveAesEncryptedObject(`MAILS_${userId}`, _MAILS[userId+""]);
 }
 
 function initImagesForUser(userId)
@@ -153,8 +153,8 @@ function initImagesForUser(userId)
     if (!_IMAGES[userId+""])
         _IMAGES[userId+""] = {};
 
-    if (!loadEncryptedObject(`IMAGES_${userId}`))
-        saveEncryptedObject(`IMAGES_${userId}`, _IMAGES[userId+""]);
+    if (!loadAesEncryptedObject(`IMAGES_${userId}`))
+        saveAesEncryptedObject(`IMAGES_${userId}`, _IMAGES[userId+""]);
 }
 
 
@@ -163,9 +163,7 @@ function getAllMailsFromUser(userId)
 {
     if (!_MAILS[userId+""])
     {
-        //console.log("> Loading mails for user " + userId);
-        _MAILS[userId+""] = loadEncryptedObject(`MAILS_${userId}`);
-        //console.log("< DONE");
+        _MAILS[userId+""] = loadAesEncryptedObject(`MAILS_${userId}`);
     }
 
     return _MAILS[userId+""];
@@ -175,7 +173,7 @@ function addMailToUser(userId, mail)
 {
     let mails = getAllMailsFromUser(userId);
     mails.push(mail);
-    saveEncryptedObject(`MAILS_${userId}`, mails);
+    saveAesEncryptedObject(`MAILS_${userId}`, mails);
 }
 
 function removeMailFromUser(userId, mailId)
@@ -188,14 +186,14 @@ function removeMailFromUser(userId, mailId)
             break;
         }
 
-    saveEncryptedObject(`MAILS_${userId}`, mails);
+    saveAesEncryptedObject(`MAILS_${userId}`, mails);
 }
 
 
 function getImage(userId, imageId)
 {
     if (!_IMAGES[userId+""])
-        _IMAGES[userId+""] = loadEncryptedObject(`IMAGES_${userId}`);
+        _IMAGES[userId+""] = loadAesEncryptedObject(`IMAGES_${userId}`);
 
     return _IMAGES[userId+""][imageId+""];
 }
@@ -203,17 +201,17 @@ function getImage(userId, imageId)
 function setImage(userId, imageId, image)
 {
     if (!_IMAGES[userId+""])
-        _IMAGES[userId+""] = loadEncryptedObject(`IMAGES_${userId}`);
+        _IMAGES[userId+""] = loadAesEncryptedObject(`IMAGES_${userId}`);
 
     _IMAGES[userId+""][imageId+""] = image;
-    saveEncryptedObject(`IMAGES_${userId}`, _IMAGES[userId+""]);
+    saveAesEncryptedObject(`IMAGES_${userId}`, _IMAGES[userId+""]);
 }
 
 function removeImage(userId, imageId)
 {
     if (!_IMAGES[userId+""])
-        _IMAGES[userId+""] = loadEncryptedObject(`IMAGES_${userId}`);
+        _IMAGES[userId+""] = loadAesEncryptedObject(`IMAGES_${userId}`);
 
     delete _IMAGES[userId+""][imageId+""];
-    saveEncryptedObject(`IMAGES_${userId+""}`, _IMAGES[userId+""]);
+    saveAesEncryptedObject(`IMAGES_${userId+""}`, _IMAGES[userId+""]);
 }

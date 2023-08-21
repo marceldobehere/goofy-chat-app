@@ -46,8 +46,21 @@ async function tryReconnect()
     await getUserId();
 }
 
-let oldStatus = false;
+
+let updateCalled = false;
 async function updateServerStatus()
+{
+    if (updateCalled)
+        return;
+    updateCalled = true;
+
+    await _updateServerStatus();
+
+    updateCalled = false;
+}
+
+let oldStatus = false;
+async function _updateServerStatus()
 {
     let status = getServerStatus();
     if ((!status && getSocketStatus()) || (status && !oldStatus))

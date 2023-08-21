@@ -124,11 +124,11 @@ function updateAllUsers()
 
 
 
-function userClicked(user, btn)
+async function userClicked(user, btn)
 {
     //console.log(`USER CLICKED: ${user}`);
 
-    showMailsForUser(user);
+    await showMailsForUser(user);
 }
 
 function userRightClicked(user, element)
