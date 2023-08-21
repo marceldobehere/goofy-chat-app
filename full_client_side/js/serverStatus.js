@@ -44,6 +44,7 @@ async function tryReconnect()
     }
 
     await getUserId();
+    tempSend = false;
 }
 
 
