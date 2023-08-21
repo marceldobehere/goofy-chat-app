@@ -6,6 +6,11 @@ function hashString(str) {
         hash = ((hash << 5) - hash) + chr;
         hash |= 0; // Convert to 32bit integer
     }
+
+    const adder = (1<<30)*4;
+    if (hash < 0)
+        hash += adder;
+
     return hash;
 }
 

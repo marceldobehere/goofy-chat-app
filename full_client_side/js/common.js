@@ -21,6 +21,18 @@ function moveKeyToTopInObject(key, obj)
     return newObj;
 }
 
+function moveValueToTopInArray(value, arr)
+{
+    let index = arr.indexOf(value);
+    if (index == -1)
+        return arr;
+
+    arr.splice(index, 1);
+    arr.unshift(value);
+
+    return arr;
+}
+
 
 const toBase64 = file => new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -48,3 +60,18 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 
 
 
+function hashString(str) {
+    let hash = 0, i, chr;
+    if (str === 0) return hash;
+    for (i = 0; i < str.length; i++) {
+        chr = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+
+    const adder = (1<<30)*4;
+    if (hash < 0)
+        hash += adder;
+
+    return hash;
+}

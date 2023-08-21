@@ -1,4 +1,5 @@
 const jsonDB = require('./jsonDB');
+const sec = require("./security.js");
 
 
 function getAllUsers()
@@ -78,9 +79,12 @@ function createUser(publicKey)
     if (user)
         return user;
 
-    let userId = getRandomIntInclusive(1000000, 9999999999999);
-    while (getUser(userId))
+    let userId = sec.hashString(publicKey);
+    while(getUser(userId))
+    {
+        console.log(`> WARNING, USER PUBLIC KEY HASH COLLIDES! ${userId}`);
         userId = getRandomIntInclusive(1000000, 9999999999999);
+    }
 
     user = {
         "userId": userId,

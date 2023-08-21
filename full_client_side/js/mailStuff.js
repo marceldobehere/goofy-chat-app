@@ -1,30 +1,43 @@
-
-
-function addRecMail(from, pubKey, data, type)
+function _getUserAndCheckForPublicKey(from, pubKey)
 {
-    if (!MAILS[from])
-        MAILS[from] = {nickname: "", "public-key":pubKey, mails: [], unread: 0};
-
-    if (MAILS[from]["public-key"] != pubKey)
+    let user = getUserInfo(from);
+    if (!user)
     {
-        if (MAILS[from]["public-key"])
+        addUser(from);
+        user = getUserInfo(from);
+    }
+
+    if (user["public-key"] != pubKey)
+    {
+        if (user["public-key"] != "")
         {
-            alert('WARNING: Public key changed for user ' + from);
+            console.log("WARNING: PUBLIC KEY CHANGED FOR USER " + from + "!");
+            console.log("OLD: " + user["public-key"]);
+            console.log("NEW: " + pubKey);
+            alert(`WARNING: PUBLIC KEY CHANGED FOR USER ${from}!`);
         }
         else
         {
-            MAILS[from]["public-key"] = pubKey;
-            saveEncryptedObject('MAILS', MAILS);
+            user["public-key"] = pubKey;
+            setUserInfo(from, user);
             updateMainMenuUserList();
         }
     }
 
-    MAILS[from]["unread"]++;
-    MAILS[from]["mails"].push({side: "left", mail: data, type:type});
+    return user;
+}
+
+function addRecMail(from, pubKey, data, type)
+{
+    let user = _getUserAndCheckForPublicKey(from, pubKey);
+
+    user["unread"]++;
+    setUserInfo(from, user);
+
+    addMailToUser(from, {side: "left", mail: data, type:type});
     //lastShownId = -1;
 
-    MAILS = moveKeyToTopInObject(from, MAILS);
-    saveEncryptedObject('MAILS', MAILS);
+    userListMoveUserToTop(from);
 
     newMsgCount++;
 
@@ -37,27 +50,10 @@ function addRecMail(from, pubKey, data, type)
 
 function addSentMail(from, pubKey, data, type)
 {
-    if (!MAILS[from])
-        MAILS[from] = {nickname: "",  "public-key":pubKey, mails: [], unread: 0};
+    let user = _getUserAndCheckForPublicKey(from, pubKey);
 
-    if (MAILS[from]["public-key"] != pubKey)
-    {
-        if (MAILS[from]["public-key"])
-        {
-            alert('WARNING: Public key changed for user ' + from);
-        }
-        else
-        {
-            MAILS[from]["public-key"] = pubKey;
-            saveEncryptedObject('MAILS', MAILS);
-            updateMainMenuUserList();
-        }
-    }
-
-
-    MAILS[from]["mails"].push({side: "right", mail: data, type:type});
-    MAILS = moveKeyToTopInObject(from, MAILS);
-    saveEncryptedObject('MAILS', MAILS);
+    addMailToUser(from, {side: "right", mail: data, type:type});
+    userListMoveUserToTop(from);
 
     newMsgCount++;
     currentUnread = 0;
@@ -66,10 +62,19 @@ function addSentMail(from, pubKey, data, type)
 }
 
 
-
-
-
+let tempSend = false;
 async function doMailSending(user, data, type)
+{
+    if (tempSend)
+        return;
+    tempSend = true;
+    await _doMailSending(user, data, type);
+    unmarkAllMessages();
+    tempSend = false;
+}
+
+
+async function _doMailSending(user, data, type)
 {
     if (!user)
         user = CURRENT_USER_ID;
@@ -119,7 +124,11 @@ async function messageSend()
         messageSending++;
 
         if (messageSending > 20)
+        {
             messageSending = 0;
+            console.log("SEND MAIL ANYWAY");
+        }
+
 
         setTimeout(messageSend, 60);
         return;
@@ -131,6 +140,8 @@ async function messageSend()
     document.getElementById('message-input').value = "";
 
     await doMailSending(user, message, "text");
+
+    unmarkAllMessages();
 
     messageSending = 0;
 }
@@ -195,11 +206,3 @@ async function imagePastedInTextArea(event)
     await doMailSending(undefined, imgData, "image");
 }
 
-
-
-function resetAllMails()
-{
-    MAILS = {};
-    saveEncryptedObject('MAILS', MAILS);
-    refresh();
-}

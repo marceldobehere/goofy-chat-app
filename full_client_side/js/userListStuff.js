@@ -1,41 +1,128 @@
-function writeAllUsers()
-{
-    // #users
-    let userDiv = document.getElementById('users');
-    userDiv.innerHTML = "";
 
-    for (let userId in MAILS)
+
+
+
+function userListWriteAllUsers()
+{
+    let users = getAllUsers();
+    for (let userId of users)
     {
         if (CURRENT_USER_ID == 0)
             CURRENT_USER_ID = userId;
 
+        userListAddUser(userId, false);
+    }
 
-        let userName = MAILS[userId]["nickname"];
-        if (!userName || userName == "")
-            userName = userId;
+    updateAllUsers();
+}
 
-        let userBtn = document.createElement("button");
-        userBtn.className += "item user ";
+function userListAddUser(userId, update)
+{
+    let usersDiv = document.getElementById('users');
+
+    let userInfo = getUserInfo(userId);
+
+    let username = userInfo["nickname"];
+    if (!username || username == "")
+        username = userId;
+
+    let userBtn = document.createElement("button");
+    userBtn.id = `USER_${userId}`;
+    userBtn.className = "item user ";
+
+    userBtn.onclick = () => {userClicked(userId, userBtn)};
+    userBtn.oncontextmenu = () => {userRightClicked(userId, userBtn); return false;};
+    userBtn.onauxclick = () => {userMiddleClicked(userId, event);};
+
+    let userSpan = document.createElement("span");
+    userSpan.id = `USER-NAME_${userId}`;
+    userSpan.className = "";
+    userSpan.textContent = username;
+    userBtn.appendChild(userSpan);
+
+    let unreadDiv = document.createElement("div");
+    unreadDiv.id = `USER-UNREAD_${userId}`;
+    unreadDiv.className = "unread";
+    unreadDiv.textContent = "0";
+    unreadDiv.style.display = "none";
+    userBtn.appendChild(unreadDiv);
+
+    usersDiv.appendChild(userBtn);
+
+    if (update == undefined || update == true)
+        updateAllUsers();
+}
+
+function userListUserExistsInDiv(userId)
+{
+    let userBtn = document.getElementById(`USER_${userId}`);
+    return userBtn != null;
+}
+
+function userListRemoveUser(user)
+{
+    if (!userListUserExistsInDiv(user))
+        return;
+
+    let usersDiv = document.getElementById('users');
+    let userBtn = document.getElementById(`USER_${user}`);
+
+    usersDiv.removeChild(userBtn);
+}
+function userListMoveUserToTop(userId)
+{
+    if (!userListUserExistsInDiv(userId))
+        userListAddUser(userId, false);
+
+    let usersDiv = document.getElementById('users');
+    let userBtn = document.getElementById(`USER_${userId}`);
+
+    usersDiv.removeChild(userBtn);
+    usersDiv.insertBefore(userBtn, usersDiv.firstChild);
+
+    let users = getAllUsers();
+    moveValueToTopInArray(userId+"", users);
+    setAllUsers(users);
+
+    updateAllUsers();
+}
+
+function updateAllUsers()
+{
+    let users = getAllUsers();
+    for (let userId of users)
+    {
+        if (CURRENT_USER_ID == 0)
+            CURRENT_USER_ID = userId;
+
+        let userInfo = getUserInfo(userId);
+
+        // update username
+        let username = userInfo["nickname"];
+        if (!username || username == "")
+            username = userId;
+
+        let userSpan = document.getElementById(`USER-NAME_${userId}`);
+        userSpan.textContent = username;
+
+        // update unread
+        let unreadDiv = document.getElementById(`USER-UNREAD_${userId}`);
+        unreadDiv.textContent = userInfo["unread"];
+        if (userInfo["unread"] > 0)
+            unreadDiv.style.display = "inline";
+        else
+            unreadDiv.style.display = "none";
+
+        // update active user
+        let userBtn = document.getElementById(`USER_${userId}`);
         if (userId == CURRENT_USER_ID)
-            userBtn.className += "user-active ";
-        userBtn.innerText = userName;
-        userBtn.onclick = () => {userClicked(userId, userBtn)};
-        userBtn.oncontextmenu = () => {userRightClicked(userId, userBtn); return false;};
-        userBtn.onauxclick = () => {userMiddleClicked(userId, event);};
-
-        let unread = MAILS[userId]["unread"];
-        if (unread > 0)
-        {
-            let unreadDiv = document.createElement("div");
-            unreadDiv.className = "unread";
-            unreadDiv.innerText = unread;
-            userBtn.append(unreadDiv);
-        }
-
-
-        userDiv.append(userBtn);
+            userBtn.className = "item user user-active";
+        else
+            userBtn.className = "item user";
     }
 }
+
+
 
 function userClicked(user, btn)
 {
@@ -47,14 +134,16 @@ function userClicked(user, btn)
 function userRightClicked(user, element)
 {
     //console.log(`USER RIGHT CLICKED: ${user}`);
-    showMailsForUser(user);
+    //showMailsForUser(user);
 
-    let nickname = prompt("Enter nickname for user", MAILS[user]["nickname"], "");
+    let userInfo = getUserInfo(user);
+
+    let nickname = prompt("Enter nickname for user", userInfo["nickname"], "");
     if (nickname == null)
         return;
 
-    MAILS[user]["nickname"] = nickname;
-    saveEncryptedObject('MAILS', MAILS);
+    userInfo["nickname"] = nickname;
+    setUserInfo(user, userInfo);
     refresh();
 }
 
@@ -65,15 +154,20 @@ function userMiddleClicked(user, event)
     if (event["button"] != 1)
         return;
 
-    let userName = MAILS[user]["nickname"];
+    let userInfo = getUserInfo(user);
+    let userName = userInfo["nickname"];
     if (!userName || userName == "")
         userName = user;
 
-    // ask if you want to delete all mails from this user
+    // ask if you want to delete the user
     if (confirm(`Delete \"${userName}\"?`))
     {
-        delete MAILS[user];
-        saveEncryptedObject('MAILS', MAILS);
+
+        userListRemoveUser(user);
+        removeUser(user);
+        clearChatWindow();
+        if (CURRENT_USER_ID == user)
+            CURRENT_USER_ID = 0;
         refresh();
     }
 }
@@ -84,7 +178,7 @@ async function addUserClick() {
     if (!user)
         return;
 
-    if (MAILS[user])
+    if (getUserInfo(user))
     {
         alert("User already exists!");
         return;
@@ -104,8 +198,8 @@ async function addUserClick() {
         return;
     }
 
-    MAILS[user] = {nickname: "", mails: [], unread: 0};
+    addUser(user);
+    userListAddUser(user, true);
     CURRENT_USER_ID = user;
-    saveEncryptedObject('MAILS', MAILS);
     refresh();
 }

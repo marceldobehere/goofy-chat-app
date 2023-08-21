@@ -20,33 +20,51 @@ function sendEncrypted(channel, obj)
     socket.emit(channel, bruh);
 }
 
-function onReceiveEncrypted(channel, callback)
-{
-    socket.on(channel, (obj) => {
-        let msg = rsaStringListIntoString(obj, ENV_CLIENT_PRIVATE_KEY);
-        let msgObj = JSON.parse(msg);
-        callback(msgObj);
-    });
-}
-
-let receivePromiseDict = {};
-
-function createOnReceivePromise(channel)
+function addSocketListenerIfNeeded(channel)
 {
     if (!receivePromiseDict[channel])
     {
+        receivePromiseDict[channel] = [];
+
         socket.on(channel, (obj) => {
             //console.log(`> CHAN: ${channel}`);
 
             let msg = rsaStringListIntoString(obj, ENV_CLIENT_PRIVATE_KEY);
             let msgObj = JSON.parse(msg);
-            receivePromiseDict[channel](msgObj);
+            if (receivePromiseDict[channel].length < 1)
+            {
+                if (receiveCallBackDict[channel])
+                    receiveCallBackDict[channel](msgObj);
+                else
+                    alert(`> ERROR: No callback for channel ${channel}`);
+                return;
+            }
+
+            //console.log(receivePromiseDict[channel]);
+            //console.log("< POPPING PROMISE")
+            receivePromiseDict[channel].pop()(msgObj);
         });
     }
+}
+
+function onReceiveEncrypted(channel, callback)
+{
+    addSocketListenerIfNeeded(channel);
+
+    receiveCallBackDict[channel] = callback;
+}
+
+let receivePromiseDict = {};
+let receiveCallBackDict = {};
+
+function createOnReceivePromise(channel)
+{
+    addSocketListenerIfNeeded(channel);
     
     let temp = new Promise(resolve =>
     {
-        receivePromiseDict[channel] = resolve;
+        //console.log("> PUSHING PROMISE");
+        receivePromiseDict[channel].push(resolve);
     });
     return temp;
 }

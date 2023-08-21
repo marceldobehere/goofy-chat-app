@@ -55,6 +55,13 @@ async function getUserId()
     ENV_USER_ID = reply["user-id"];
     console.log(`USER ID: ${ENV_USER_ID}`);
 
+    if (ENV_USER_ID != ENV_CLIENT_PUBLIC_KEY_HASH)
+    {
+        alert('Error: Server sent invalid user id!');
+        ENV_USER_ID = 0;
+        return;
+    }
+
     let userIdSpan = document.getElementById('user-id');
     userIdSpan.innerText = ENV_USER_ID;
     userIdSpan.onclick = () => {navigator.clipboard.writeText(ENV_USER_ID);};

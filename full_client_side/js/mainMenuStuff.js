@@ -61,9 +61,7 @@ function deleteProfile()
     if (!confirm("Ya really sure??"))
         return;
 
-    resetKeys();
-    MAILS = {};
-    saveEncryptedObject('MAILS', MAILS);
+    clearAllData();
     location.reload();
 }
 
@@ -80,9 +78,12 @@ function updateMainMenuUserList()
 
     userList.innerHTML = "";
 
-    for (let userId in MAILS)
+    let users = getAllUsers();
+    for (let userId of users)
     {
-        let username = MAILS[userId]["nickname"];
+        let userInfo = getUserInfo(userId);
+
+        let username = userInfo["nickname"];
         if (!username || username == "")
             username = userId;
 
@@ -96,7 +97,7 @@ function updateMainMenuUserList()
             userP.innerText = `${username} (ID ${userId})`;
 
         let userPre = document.createElement("pre");
-        userPre.innerText = MAILS[userId]["public-key"];
+        userPre.innerText = userInfo["public-key"];
         userPre.style.display = "block";
 
         userDiv.append(userP);

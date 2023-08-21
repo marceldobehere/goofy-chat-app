@@ -19,8 +19,10 @@ function loadEncryptedObject(key)
     if (!temp)
         return null;
 
+    //console.log(`> Loading \"${key}\" - ${temp.length} bytes`);
     temp = JSON.parse(temp);
     temp = rsaStringListIntoString(temp, ENV_CLIENT_PRIVATE_KEY);
+
     return JSON.parse(temp);
 }
 

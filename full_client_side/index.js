@@ -4,6 +4,7 @@ function loadKeys()
     if (clientKeys)
     {
         ENV_CLIENT_PUBLIC_KEY = clientKeys["public"];
+        ENV_CLIENT_PUBLIC_KEY_HASH = hashString(ENV_CLIENT_PUBLIC_KEY);
         ENV_CLIENT_PRIVATE_KEY = clientKeys["private"];
     }
     else
@@ -15,34 +16,24 @@ function loadKeys()
 }
 
 
-function loadMails()
-{
-    let mails = loadEncryptedObject('MAILS');
-    if (mails)
-        MAILS = mails;
-    else
-        MAILS = {};
-}
-
-
 async function doServerInit()
 {
     loadKeys();
-
-    loadMails();
-
     console.log(ENV_CLIENT_PUBLIC_KEY);
-    console.log(MAILS);
-    // if (localStorage.getItem('MAILS'))
-    //     console.log(`MAIL SIZE: ${localStorage.getItem('MAILS').length}`)
+    console.log(ENV_CLIENT_PUBLIC_KEY_HASH);
 
+    initUserList();
+
+    userListWriteAllUsers();
 
     updateMainMenuUserList();
     updateMainMenu();
 
-    await delay(50);
+    await delay(20);
 
     await updateServerStatus();
+
+    await delay(10);
 
     refresh();
 
@@ -62,7 +53,7 @@ doServerInit();
 
 function refresh()
 {
-    writeAllUsers();
+    updateAllUsers();
     showMailsForUser(CURRENT_USER_ID);
 }
 
@@ -70,7 +61,7 @@ function refresh()
 
 
 
-onReceiveEncrypted('mail', (obj) => {
+onReceiveEncrypted('mailRec', (obj) => {
 
     if (!obj || obj["action"] != "rec")
         return;

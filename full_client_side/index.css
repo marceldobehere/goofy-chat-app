@@ -240,6 +240,7 @@ pre
     display: inline;
     margin: 5px;
     background-color: red;
+    padding: 2px;
 }
 
 .side-left

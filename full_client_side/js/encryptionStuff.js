@@ -33,6 +33,7 @@ function resetKeys()
 {
     let keys = generateKeys();
     ENV_CLIENT_PUBLIC_KEY = keys["public"];
+    ENV_CLIENT_PUBLIC_KEY_HASH = hashString(ENV_CLIENT_PUBLIC_KEY);
     ENV_CLIENT_PRIVATE_KEY = keys["private"];
 
     saveObject('CLIENT_KEYS', keys);
@@ -44,6 +45,7 @@ function encryptStr(str, publicKey)
     _encrypt.setPublicKey(publicKey);
     return _encrypt.encrypt(str);
 }
+
 
 let _decrypt = new JSEncrypt();
 function decryptStr(str, privateKey)

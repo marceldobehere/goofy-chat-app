@@ -194,7 +194,7 @@ function sendAllMailsPossible()
         for (let mail of mails)
         {
             //console.log("Sending mail to " + usr["userId"]);
-            socket.emit("mail", enc.sendObj({action: "rec", "mail": mail["mail"], "from": mail["from"], type:mail["type"], "public-key": mail["public-key"]}, session["public-key"]));
+            socket.emit("mailRec", enc.sendObj({action: "rec", "mail": mail["mail"], "from": mail["from"], type:mail["type"], "public-key": mail["public-key"]}, session["public-key"]));
         }
     }
 

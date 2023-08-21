@@ -54,7 +54,7 @@ const calcServiceDict = {};
 
 
 app.get('/', (req, res) => {
-    res.redirect('/index/index.html');
+    res.redirect("https://marceldobehere.github.io/goofy-chat-app/full_client_side/");//'/index/index.html');
 });
 
 app.get('/*', cors(), (req, res) => {
