@@ -204,7 +204,7 @@ pre
     position: absolute;
     top: 0;
     left: 0;
-    right: 20%;
+    width: 80%;
     bottom: 0px;
 
     background-color: black;
@@ -223,7 +223,7 @@ pre
     position: absolute;
     top: 0;
     right: 0;
-    left: 80%;
+    width: 20%;
     bottom: 0px;
 
     background-color: #254060;
