@@ -34,6 +34,7 @@ So feel free to experiment with it, but don't expect it to be perfect.
 - Click the `Send` button to send message
 - `Shift + Enter` to add new line
 - Left-click the background to clear the chat
+- Ctrl + V to paste text, image links, images or files into the chat (only supports small files rn)
 
 ## How to host locally
 1. Clone the repo
