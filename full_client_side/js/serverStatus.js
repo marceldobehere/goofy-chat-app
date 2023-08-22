@@ -78,4 +78,7 @@ async function _updateServerStatus()
     let statusDiv = document.getElementById('server-status');
     statusDiv.innerText = status ? "online" : "offline";
     statusDiv.className = status ? "server-online" : "server-offline";
+
+    if (status)
+        iframeMenuClose();
 }

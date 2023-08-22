@@ -7,7 +7,7 @@ var ENV_USER_ID;
 var ENV_SERVER_ADDRESS = loadObject("SERVER_ADDR");
 if (!ENV_SERVER_ADDRESS)
 {
-    ENV_SERVER_ADDRESS = "https://localhost:80";
+    ENV_SERVER_ADDRESS = "";
     saveObject("SERVER_ADDR", ENV_SERVER_ADDRESS);
 }
 

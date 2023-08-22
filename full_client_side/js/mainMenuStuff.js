@@ -24,6 +24,33 @@ function mainMenuClose()
     mainMenu.className += ' menu-hidden';
 }
 
+function iframeMenuClose()
+{
+    // add menu-hidden class to iframe-trust if it doesnt have it and remove menu-shown class if it has it
+    let iframeMenu = document.getElementById('iframe-menu');
+    iframeMenu.className = iframeMenu.className.replace(' menu-shown', '');
+
+    if (iframeMenu.className.includes('menu-hidden'))
+        return;
+
+    iframeMenu.className += ' menu-hidden';
+}
+
+
+function iframeMenuOpen()
+{
+    document.getElementById("iframe-menu-link").href = ENV_SERVER_ADDRESS;
+
+    // add menu-shown class to main-menu if it doesnt have it and remove menu-hidden class if it has it
+    let iframeMenu = document.getElementById('iframe-menu');
+    iframeMenu.className = iframeMenu.className.replace(' menu-hidden', '');
+
+    if (iframeMenu.className.includes('menu-shown'))
+        return;
+
+    iframeMenu.className += ' menu-shown';
+}
+
 
 function serverAddressChange()
 {
@@ -32,7 +59,7 @@ function serverAddressChange()
         return;
 
     if (!addr.startsWith("http://") && !addr.startsWith("https://"))
-        addr = "http://" + addr;
+        addr = "https://" + addr;
 
     if (addr.endsWith("/"))
         addr = addr.substring(0, addr.length - 1);

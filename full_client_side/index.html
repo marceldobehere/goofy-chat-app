@@ -27,6 +27,24 @@
         </div>
     </div>
 
+    <div id="iframe-menu" class="menu blur-bg menu-hidden" onclick="iframeMenuClose();event.stopPropagation();">
+        <div class="actual-menu" onclick="event.stopPropagation();">
+            <div style="height: 40px;">
+                <button class="title-info float-right" onclick="iframeMenuClose()">Close Menu</button>
+                <h1>Information</h1>
+            </div>
+
+            <p>
+                Yo the server is down.<br>
+                Now this might be because the server is actually down or because your browser does not trust the domain.<br>
+                <br>
+                To make the browser trust the domain <a id="iframe-menu-link" href="" target="_blank" style="color: #2020FF;">click here</a>.
+            </p>
+
+
+        </div>
+    </div>
+
     <div id="main-menu" class="menu blur-bg menu-hidden" onclick="mainMenuClose();event.stopPropagation();">
         <div class="actual-menu" onclick="event.stopPropagation();">
             <div style="height: 40px;">

@@ -22,6 +22,31 @@ async function doServerInit()
     console.log(ENV_CLIENT_PUBLIC_KEY);
     console.log(ENV_CLIENT_PUBLIC_KEY_HASH);
 
+    const queryString = window.location.search;
+    console.log(queryString);
+    if (queryString.indexOf("?source=") == 0)
+    {
+        let source = queryString.substring("?source=".length);
+        source = source.replace("_", ":");
+        console.log(source);
+
+        ENV_SERVER_ADDRESS = "https://" + source;
+        console.log(ENV_SERVER_ADDRESS);
+        saveObject("SERVER_ADDR", ENV_SERVER_ADDRESS);
+
+        console.log(window.location.href);
+
+        // remove the source param from the url and reload
+        let tempUrl = window.location.href;
+        tempUrl = tempUrl.substring(0, tempUrl.indexOf("?source="));
+        console.log(tempUrl);
+
+        window.location.href = tempUrl;
+    }
+
+    if (ENV_SERVER_ADDRESS == "")
+        serverAddressChange();
+
     initUserList();
 
     userListWriteAllUsers();
@@ -38,12 +63,20 @@ async function doServerInit()
     await refresh();
 
     setInterval(updateServerStatus, 1000);
+
+    setTimeout(doCheckIfServerDomainMaybeDiff, 2000);
 }
 
 doServerInit();
 
 
+function doCheckIfServerDomainMaybeDiff()
+{
+    if (getSocketStatus())
+        return;
 
+    iframeMenuOpen();
+}
 
 
 
