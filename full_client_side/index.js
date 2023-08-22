@@ -64,7 +64,7 @@ async function doServerInit()
 
     setInterval(updateServerStatus, 1000);
 
-    setTimeout(doCheckIfServerDomainMaybeDiff, 2000);
+    setTimeout(doCheckIfServerDomainMaybeDiff, 3500);
 }
 
 try
