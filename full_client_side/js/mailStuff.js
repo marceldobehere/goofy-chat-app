@@ -35,7 +35,30 @@ function addAnyMail(from, mail)
         // if link then add the image link thing
         // if raw data, then add it to the image localstorage object
         // send a mail with a link to the image localstorage object
-        console.log("> GOT IMG");
+        //console.log("> GOT IMG");
+        let id;
+        do
+        {
+            id = getRandomIntInclusive(1000000000, 99999999999999);
+        } while (getImage(from, id))
+        //console.log(`ID: ${id}`);
+
+        setImage(from, id, mail["mail"]);
+
+        let isLink = false;
+        //console.log(mail);
+        let mailData = mail["mail"]["data"];
+        // add check for image links
+        if (mailData.startsWith("http://") || mailData.startsWith("https://"))
+            isLink = true;
+
+        mail["mail"] = {link:isLink, user:from, id:id};
+
+        addMailToUser(from, mail);
+    }
+    else if (mail["type"] == "file")
+    {
+        //console.log("> GOT FILE");
         let id;
         do
         {
@@ -45,12 +68,7 @@ function addAnyMail(from, mail)
 
         setImage(from, id, mail["mail"]);
 
-        let isLink = false;
-        // add check for image links
-        if (mail["mail"].startsWith("http://") || mail["mail"].startsWith("https://"))
-            isLink = true;
-
-        mail["mail"] = {link:isLink, user:from, id:id};
+        mail["mail"] = {link:false, user:from, id:id};
 
         addMailToUser(from, mail);
     }
@@ -132,7 +150,7 @@ async function _doMailSending(user, data, type)
     }
 
     let pubKey = reply["public-key"];
-    let enc = StringIntoRsaStringList(data, pubKey);
+    let enc = StringIntoRsaStringList(JSON.stringify(data), pubKey);
 
     replyPromise = createOnReceivePromise('mail');
     sendEncrypted('mail', {action:"send", "to": user, "mail": enc, type:type});
@@ -217,7 +235,7 @@ async function imagePastedInTextArea(event)
             if (!confirm(`Send image?`))
                 return;
 
-            await doMailSending(undefined, text, "image");
+            await doMailSending(undefined, {name: "text", data: text}, "image");
 
             // clear input box
             document.getElementById('message-input').value = "";
@@ -229,15 +247,18 @@ async function imagePastedInTextArea(event)
     if (!file)
         return;
 
-    //console.log(file);
-    console.log(file.size);
+    //console.log(file.name);
+    //console.log(file.size);
     let imgData = await toBase64(file);
     //console.log(imgData);
 
+    let isImg = await isImageValid(imgData);
+    //console.log(isImg);
+
     // ask if you want to send the image
-    if (!confirm(`Send image?`))
+    if (!confirm(`Send ${(isImg ? "image" : "file")}?`))
         return;
 
-    await doMailSending(undefined, imgData, "image");
+    await doMailSending(undefined, {name: file.name, data: imgData}, (isImg ? "image" : "file"));
 }
 

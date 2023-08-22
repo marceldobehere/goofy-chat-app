@@ -88,57 +88,79 @@ async function addMailBlock(mailThing, container, bottom)
             return true;
         };
 
-        let actuallyAddImage = true;
-        //console.log(mail);
-        if (!ENV_AUTOLOAD_IMAGES)
+        try
         {
-            if (mail["link"])
-                actuallyAddImage = "link";
-            else
-                actuallyAddImage = "image";
-        }
-        else if (mail["link"])
-        {
-            if (ENV_AUTOLOAD_LINK_IMAGES)
+            let actuallyAddImage = true;
+            //console.log(mail);
+            if (!ENV_AUTOLOAD_IMAGES)
             {
-                img.src = getImage(mail["user"], mail["id"]);
-                actuallyAddImage = true;
+                if (mail["link"])
+                    actuallyAddImage = "link";
+                else
+                    actuallyAddImage = "image";
+            }
+            else if (mail["link"])
+            {
+                if (ENV_AUTOLOAD_LINK_IMAGES)
+                {
+                    img.src = getImage(mail["user"], mail["id"])["data"];
+                    actuallyAddImage = true;
+                }
+                else
+                    actuallyAddImage = "link";
             }
             else
-                actuallyAddImage = "link";
-        }
-        else
-        {
-            img.src = getImage(mail["user"], mail["id"]);
-            actuallyAddImage = true;
-        }
-
-        if (actuallyAddImage == true)
-        {
-            await insertImageYes(mailDiv, img, side);
-        }
-        else
-        {
-            if (actuallyAddImage == "link")
             {
-                mailDiv.innerText = `<CLICK TO LOAD (${getImage(mail["user"], mail["id"])})>`;
+                img.src = getImage(mail["user"], mail["id"])["data"];
+                actuallyAddImage = true;
+            }
+
+            if (actuallyAddImage == true)
+            {
+                await insertImageYes(mailDiv, img, side);
+            }
+            else if (actuallyAddImage == "link")
+            {
+                mailDiv.innerText = `<CLICK TO LOAD (${getImage(mail["user"], mail["id"])["data"]})>`;
+                mailDiv.className += " interactable ";
                 mailDiv.onclick = async () =>
                 {
+                    img.src = getImage(mail["user"], mail["id"])["data"];
                     mailDiv.innerText = "";
-                    img.src = getImage(mail["user"], mail["id"]);
                     await insertImageYes(mailDiv, img, side);
                 }
             }
             else
             {
                 mailDiv.innerText = `<CLICK TO LOAD IMAGE>`;
+                mailDiv.className += " interactable ";
                 mailDiv.onclick = async () =>
                 {
-                    mailDiv.innerText = "";
                     img.src = getImage(mail["user"], mail["id"]);
+                    mailDiv.innerText = "";
                     await insertImageYes(mailDiv, img, side);
                 }
             }
+        }
+        catch (e)
+        {
+            let file = getImage(mail["user"], mail["id"]);
+            mailDiv.innerText = `<CLICK TO DOWNLOAD \"${file["name"]}\">`;
+            mailDiv.className += " interactable ";
+            mailDiv.onclick = async () =>
+            {
+                downloadBase64File(file["data"], file["name"]);
+            }
+        }
+    }
+    else if (mailType == "file")
+    {
+        let file = getImage(mail["user"], mail["id"]);
+        mailDiv.innerText = `<CLICK TO DOWNLOAD \"${file["name"]}\">`;
+        mailDiv.className += " interactable ";
+        mailDiv.onclick = async () =>
+        {
+            downloadBase64File(file["data"], file["name"]);
         }
     }
     else

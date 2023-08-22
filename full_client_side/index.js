@@ -67,7 +67,21 @@ async function doServerInit()
     setTimeout(doCheckIfServerDomainMaybeDiff, 2000);
 }
 
-doServerInit();
+try
+{
+    doServerInit();
+}
+catch (e)
+{
+    console.log(e);
+    alert(`A FATAL ERROR OCCURED! ${e}`);
+
+    if (prompt("RESET ALL DATA"))
+    {
+        clearAllData();
+        location.reload();
+    }
+}
 
 
 function doCheckIfServerDomainMaybeDiff()
@@ -104,7 +118,7 @@ onReceiveEncrypted('mailRec', (obj) => {
 
     let from = obj["from"];
     let mailEnc = obj["mail"];
-    let mail = rsaStringListIntoString(mailEnc, ENV_CLIENT_PRIVATE_KEY);
+    let mail = JSON.parse(rsaStringListIntoString(mailEnc, ENV_CLIENT_PRIVATE_KEY));
     let fromPubKey = obj["public-key"];
     let type = obj["type"];
 

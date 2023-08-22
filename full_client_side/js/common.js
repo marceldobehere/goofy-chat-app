@@ -114,3 +114,22 @@ function calculateAspectRatioFit(srcWidth, srcHeight, maxWidth, maxHeight) {
 
     return { width: srcWidth*ratio, height: srcHeight*ratio };
 }
+
+
+
+// https://stackoverflow.com/questions/14011021/how-to-download-a-base64-encoded-image
+
+// Parameters:
+// contentType: The content type of your file.
+//              its like application/pdf or application/msword or image/jpeg or
+//              image/png and so on
+// base64Data: Its your actual base64 data
+// fileName: Its the file name of the file which will be downloaded.
+
+function downloadBase64File(base64DataStr, fileName) {
+    const linkSource = base64DataStr;
+    const downloadLink = document.createElement("a");
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+}
