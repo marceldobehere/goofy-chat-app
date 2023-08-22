@@ -94,6 +94,7 @@ pre
     left: 0;
     width: 20%;
     bottom: 60px;
+    overflow-y: auto;
 
     background-color: #102030;
 }
