@@ -69,6 +69,7 @@ async function _updateServerStatus()
         console.log("> Trying to reconnect.");
         await tryReconnect();
         messageSending = 0;
+        mailRecCount = 0;
         status = getServerStatus();
         updateMainMenuUserList();
     }

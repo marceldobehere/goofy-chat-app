@@ -107,18 +107,22 @@ async function refresh()
 
 
 
-
-onReceiveEncrypted('mailRec', (obj) => {
+let mailRecCount = 0;
+onReceiveEncrypted('mailRec', async (obj) => {
 
     if (!obj || obj["action"] != "rec")
         return;
+
+    while (mailRecCount > 0)
+        await delay(50);
+    mailRecCount++;
 
     console.log('> MAIL RECEIVED');
     //console.log(obj);
 
     let from = obj["from"];
     let mailEnc = obj["mail"];
-    let mail = JSON.parse(rsaStringListIntoString(mailEnc, ENV_CLIENT_PRIVATE_KEY));
+    let mail = JSON.parse(await rsaStringListIntoStringAsync(mailEnc, ENV_CLIENT_PRIVATE_KEY));
     let fromPubKey = obj["public-key"];
     let type = obj["type"];
 
@@ -128,6 +132,8 @@ onReceiveEncrypted('mailRec', (obj) => {
     addRecMail(from, fromPubKey, mail, type);
 
     refresh();
+
+    mailRecCount--;
 });
 
 

@@ -135,3 +135,52 @@ function rsaStringListIntoString(rsaStrList, privKey)
     }
     return str;
 }
+
+async function StringIntoRsaStringListAsync(str, pubKey)
+{
+    if (!pubKey)
+    {
+        alert(`Error: StringIntoRsaStringList() called with no public key!`);
+        return [];
+    }
+    // we need to split the string into chunks of 100 bytes
+    let rawStrList = [];
+    let strLen = str.length;
+    for (let i = 0; i < strLen; )
+    {
+        let chunk = str.substring(i, i + 100);
+        rawStrList.push(chunk);
+        i += 100;
+    }
+
+    let rsaStrList = [];
+    for (let i = 0; i < rawStrList.length; i++)
+    {
+        let chunk = rawStrList[i];
+        let rsaChunk = encryptStr(chunk, pubKey);
+        await delay(10);
+        rsaStrList.push(rsaChunk);
+    }
+
+    return rsaStrList;
+}
+
+async function rsaStringListIntoStringAsync(rsaStrList, privKey)
+{
+    if (!privKey)
+    {
+        alert(`Error: rsaStringListIntoString() called with no private key!`);
+        return "";
+    }
+
+    let str = "";
+    for (let i = 0; i < rsaStrList.length; i++)
+    {
+        let rsaChunk = rsaStrList[i];
+        let chunk = decryptStr(rsaChunk, privKey);
+
+        await delay(10);
+        str += chunk;
+    }
+    return str;
+}

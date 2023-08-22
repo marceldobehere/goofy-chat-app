@@ -81,6 +81,12 @@ async function addMailBlock(mailThing, container, bottom)
         mailDiv.innerText = mail;
     else if (mailType == "image")
     {
+        {
+            let tempData = getImage(mail["user"], mail["id"]);
+            if (tempData["data"] == undefined)
+                setImage(mail["user"], mail["id"], {data: tempData, name: "unknown"});
+        }
+
         let img = document.createElement("img");
         img.oncontextmenu = (event) =>
         {
@@ -155,6 +161,12 @@ async function addMailBlock(mailThing, container, bottom)
     }
     else if (mailType == "file")
     {
+        {
+            let tempData = getImage(mail["user"], mail["id"]);
+            if (tempData["data"] == undefined)
+                setImage(mail["user"], mail["id"], {data: tempData, name: "unknown"});
+        }
+
         let file = getImage(mail["user"], mail["id"]);
         mailDiv.innerText = `<CLICK TO DOWNLOAD \"${file["name"]}\">`;
         mailDiv.className += " interactable ";
