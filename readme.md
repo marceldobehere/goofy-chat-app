@@ -47,7 +47,6 @@ So feel free to experiment with it, but don't expect it to be perfect.
 Idk
 
 ## TODO
-(There is a bit of stuff, since I just made it in like 2 days lmao)
 - Add blocking people
 - Add notification sounds
 - Add a timeout for spam messages and registering
@@ -62,13 +61,9 @@ Idk
 ## TODO (security)
 - Set default size of the RSA keys to like 2048 bit or something
 
-
 ## TODO (Maybe)
 - Add checking if a person is online
-- Add an automatic reconnect to the server, if it goes down temporarily 
 - Add custom css importing
-- Add custom layout modes
-- Add posting (small) files other than images (idk yet)
 
 
 
