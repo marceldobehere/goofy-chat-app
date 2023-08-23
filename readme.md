@@ -53,7 +53,6 @@ Idk
 - Check if auto timeout/deletion of messages works
 - Make deleting your account send that request to the server too
 - Add auto deleting profiles after 4 months of inactivity or something
-- Improve UI
 - Make an exporter and importer for chats and or private/public keys
 
 ## TODO (security)
@@ -61,7 +60,6 @@ Idk
 
 ## TODO (Maybe)
 - Add checking if a person is online
-- Add custom css importing
 
 
 

@@ -135,8 +135,9 @@ const shell = require("./yesServer/shell");
 shell.initApp(dbStuff, registerManager, calcServiceManager, mailManager);
 
 
-server.listen(80, () => {
-    console.log('listening on *:80');
+let port = USE_HTTPS ? 443 : 80;
+server.listen(port, () => {
+    console.log(`listening on *:${port}`);
 });
 
 shell.start();

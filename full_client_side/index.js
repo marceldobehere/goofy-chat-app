@@ -18,6 +18,8 @@ function loadKeys()
 
 async function doServerInit()
 {
+    loadAndApplyStoredCss();
+
     loadKeys();
     console.log(ENV_CLIENT_PUBLIC_KEY);
     console.log(ENV_CLIENT_PUBLIC_KEY_HASH);

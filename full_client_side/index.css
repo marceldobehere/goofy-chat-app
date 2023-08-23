@@ -321,3 +321,10 @@ pre
     cursor: pointer;
     font-style: italic;
 }
+
+#custom-css-input
+{
+    width:100%;
+    height: 300px;
+    overflow: auto;
+}
