@@ -184,3 +184,19 @@ async function rsaStringListIntoStringAsync(rsaStrList, privKey)
     }
     return str;
 }
+
+
+let _sign = new JSEncrypt();
+function createSignature(obj, privKey)
+{
+    _sign.setPrivateKey(privKey);
+    return _sign.sign(JSON.stringify(obj), CryptoJS.SHA256, "sha256");
+}
+
+
+let _verify = new JSEncrypt();
+function verifySignature(obj, signature, pubKey)
+{
+    _verify.setPublicKey(pubKey);
+    return _verify.verify(JSON.stringify(obj), signature, CryptoJS.SHA256);
+}

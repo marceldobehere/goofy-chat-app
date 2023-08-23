@@ -2,6 +2,8 @@ const sec = require("./security");
 let dbStuff;
 let registerManager;
 let calcServiceManager;
+let mailManager;
+const fs = require("fs");
 
 function stringify(obj)
 {
@@ -18,11 +20,13 @@ function stringify(obj)
 }
 
 
-function initApp(_dbStuff, _registerManager, _calcServiceManager)
+
+function initApp(_dbStuff, _registerManager, _calcServiceManager, _mailManager)
 {
     dbStuff = _dbStuff;
     registerManager = _registerManager;
     calcServiceManager = _calcServiceManager;
+    mailManager = _mailManager;
 }
 
 const _readline = require('readline').createInterface({
@@ -60,6 +64,38 @@ async function start()
             console.log("> Reloaded all calc services!");
             continue;
         }
+        else if (cmd.startsWith("/show all mails"))
+        {
+            console.log(mailManager.globalMailList);
+            continue;
+        }
+        else if (cmd.startsWith("/save all mails"))
+        {
+            let savedMails = JSON.stringify(mailManager.globalMailList);
+            // save file to /data/mails.txt
+            fs.writeFileSync(__dirname + "/../data/mails.txt", savedMails);
+            console.log(`> Saved Mails to \"${__dirname + "/../data/mails.txt"}\"`);
+            continue;
+        }
+        else if (cmd.startsWith("/load all mails"))
+        {
+            // clear mail array
+            // load data from /data/mails.txt
+            // parse data
+            // add mails to mail array
+
+            if (!cmd.startsWith("/load all mails add"))
+                mailManager.globalMailList.length = 0;
+
+            let fileData = fs.readFileSync(__dirname + "/../data/mails.txt", 'utf-8');
+            let mails = JSON.parse(fileData);
+            for (let mail of mails)
+                mailManager.globalMailList.push(mail);
+
+            console.log(`> Loaded Mails from \"${__dirname + "/../data/mails.txt"}\"`);
+            continue;
+        }
+
         // else if (cmd.startsWith("/show all users"))
         // {
         //     console.log("> Showing all users...");

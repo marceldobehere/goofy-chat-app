@@ -132,8 +132,7 @@ calcServiceManager.initStuff(__dirname, calcServiceDict);
 calcServiceManager.reloadAllCalcServices();
 
 const shell = require("./yesServer/shell");
-shell.initApp(dbStuff, registerManager, calcServiceManager);
-
+shell.initApp(dbStuff, registerManager, calcServiceManager, mailManager);
 
 
 server.listen(80, () => {

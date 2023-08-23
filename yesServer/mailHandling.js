@@ -5,12 +5,33 @@ let enc;
 let socketSessionStuff;
 const sec = require("./security.js");
 const socketSessionManager = require("./socketSessionStuff");
+const fs = require("fs");
 
-var globalMailList = [];
+function logWithTime(str)
+{
+    console.log(`[${new Date().toLocaleString()}] ${str}`);
+}
+
+let globalMailList = [];
 
 function tempCallback()
 {
     sendAllMailsPossible();
+}
+
+function backUpMailList()
+{
+    try
+    {
+        let savedMails = JSON.stringify(globalMailList);
+        // save file to /data/mails.txt
+        fs.writeFileSync(__dirname + "/../data/mails_backup.txt", savedMails);
+        logWithTime(`> Backed up Mails to \"${__dirname + "/../data/mails_backup.txt"}\"`);
+    }
+    catch (e)
+    {
+        logWithTime(`> Error while backing up mails: ${e}`);
+    }
 }
 
 function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
@@ -20,95 +41,109 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
     app = _app;
     io = _io;
     dbStuff = _dbStuff;
-    globalMailList = [];
+    setInterval(backUpMailList, 1000 * 60 * 60 * 1); // every hour
 
     socketSessionStuff.newSocketCallbacks.push(tempCallback);
 
     io.on('connection', (socket) => {
         socket.on('mail', (obj1) => {
-            //console.log("> Mail");
-            let obj = enc.receiveObj(obj1);
-            //console.log(obj);
-
-            if (!obj)
+            try
             {
-                console.log("> Error while parsing JSON");
-                return;
-            }
-
-            let action = obj["action"];
-
-
-            if (action == "req-pub-key")
-            {
-                console.log("M> Request public key");
-                let session = socketSessionStuff.getSessionFromSocket(socket);
-                if (!session)
-                {
-                    console.log("> Session not found");
-                    return;
-                }
-
-                let clientPubKey = session["public-key"];
-                let usrId = obj["user-id"];
-                let usr = dbStuff.getUser(usrId);
-                if (!usr)
-                {
-                    socket.emit("mail", enc.sendObj({action: action, error: "User does not exist"}, clientPubKey));
-                    console.log("> User not found");
-                    return;
-                }
-
-                let pubKey = usr["public-key"];
-                socket.emit("mail", enc.sendObj({action: action, "public-key": pubKey, error: 0}, clientPubKey));
-                return;
-            }
-            else if (action == "send")
-            {
-                console.log("M> Send Mail");
+                //console.log("> Mail");
+                let obj = enc.receiveObj(obj1);
                 //console.log(obj);
 
-                let session = socketSessionStuff.getSessionFromSocket(socket);
-                if (!session)
+                if (!obj)
                 {
-                    console.log("> Session not found");
+                    console.log("> Error while parsing JSON");
                     return;
                 }
 
-                let clientPubKey = session["public-key"];
-                let usr = dbStuff.getUser(session["user-id"]);
-                if (!usr)
+                if (!obj["action"])
                 {
-                    socket.emit("mail", enc.sendObj({action: action, error: "You do not exist"}, clientPubKey));
-                    console.log("> User not found");
+                    console.log("> No Action");
                     return;
                 }
 
-                let mail =
-                {
-                    to: obj["to"],
-                    from: usr["userId"],
-                    "public-key": usr["public-key"], // this is the public key of the sender
-                    mail: obj["mail"],
-                    type: obj["type"],
-                    date: new Date()
-                };
+                let action = obj["action"];
 
-                let mailSize = JSON.stringify(mail).length;
-                //console.log(mailSize);
-                if (mailSize > 500000)
+
+                if (action == "req-pub-key")
                 {
-                    socket.emit("mail", enc.sendObj({action: action, error: "Mail Size is over 500KB"}, clientPubKey));
-                    console.log(`> Mail size is over 500KB (${mailSize})`);
+                    logWithTime("M> Request public key");
+                    let session = socketSessionStuff.getSessionFromSocket(socket);
+                    if (!session)
+                    {
+                        console.log("> Session not found");
+                        return;
+                    }
+
+                    let clientPubKey = session["public-key"];
+                    let usrId = obj["user-id"];
+                    let usr = dbStuff.getUser(usrId);
+                    if (!usr)
+                    {
+                        socket.emit("mail", enc.sendObj({action: action, error: "User does not exist"}, clientPubKey));
+                        console.log("> User not found");
+                        return;
+                    }
+
+                    let pubKey = usr["public-key"];
+                    socket.emit("mail", enc.sendObj({action: action, "public-key": pubKey, error: 0}, clientPubKey));
                     return;
                 }
+                else if (action == "send")
+                {
+                    logWithTime("M> Send Mail");
+                    //console.log(obj);
 
-                globalMailList.push(mail);
+                    let session = socketSessionStuff.getSessionFromSocket(socket);
+                    if (!session)
+                    {
+                        console.log("> Session not found");
+                        return;
+                    }
 
-                socket.emit("mail", enc.sendObj({action: action, error: 0}, clientPubKey));
+                    let clientPubKey = session["public-key"];
+                    let usr = dbStuff.getUser(session["user-id"]);
+                    if (!usr)
+                    {
+                        socket.emit("mail", enc.sendObj({action: action, error: "You do not exist"}, clientPubKey));
+                        console.log("> User not found");
+                        return;
+                    }
 
-                sendAllMailsPossible();
-                return;
+                    let mail =
+                        {
+                            to: obj["to"],
+                            from: usr["userId"],
+                            "public-key": usr["public-key"], // this is the public key of the sender
+                            mail: obj["mail"],
+                            type: obj["type"],
+                            sig: obj["sig"],
+                            date: new Date()
+                        };
+
+                    let mailSize = JSON.stringify(mail).length;
+                    //console.log(mailSize);
+                    if (mailSize > 500000)
+                    {
+                        socket.emit("mail", enc.sendObj({action: action, error: "Mail Size is over 500KB"}, clientPubKey));
+                        console.log(`> Mail size is over 500KB (${mailSize})`);
+                        return;
+                    }
+
+                    globalMailList.push(mail);
+
+                    socket.emit("mail", enc.sendObj({action: action, error: 0}, clientPubKey));
+
+                    sendAllMailsPossible();
+                    return;
+                }
+            }
+            catch (e)
+            {
+                logWithTime(`> Error while handling mail: ${e}`);
             }
 
 
@@ -133,8 +168,6 @@ function deleteOldMails()
             i--;
         }
     }
-
-
 }
 
 function getMailsForUser(userId, remove)
@@ -193,8 +226,8 @@ function sendAllMailsPossible()
 
         for (let mail of mails)
         {
-            //console.log("Sending mail to " + usr["userId"]);
-            socket.emit("mailRec", enc.sendObj({action: "rec", "mail": mail["mail"], "from": mail["from"], type:mail["type"], "public-key": mail["public-key"]}, session["public-key"]));
+            logWithTime("M> Sending mail to " + usr["userId"]);
+            socket.emit("mailRec", enc.sendObj({action: "rec", "mail": mail["mail"], "from": mail["from"], type:mail["type"], sig:mail["sig"], "public-key": mail["public-key"]}, session["public-key"]));
         }
     }
 
@@ -205,4 +238,4 @@ function sendAllMailsPossible()
     tempMail = false;
 }
 
-module.exports = {initApp, sec};
+module.exports = {initApp, sec, globalMailList};

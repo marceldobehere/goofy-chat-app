@@ -125,6 +125,21 @@ onReceiveEncrypted('mailRec', async (obj) => {
     let mail = JSON.parse(await rsaStringListIntoStringAsync(mailEnc, ENV_CLIENT_PRIVATE_KEY));
     let fromPubKey = obj["public-key"];
     let type = obj["type"];
+    let sig = obj["sig"];
+
+    if (hashString(fromPubKey) != from)
+    {
+        console.log('> ERROR: INVALID FROM ID');
+        alert("ERROR: RECEIVED MAIL HAS INVALID FROM ID");
+        return;
+    }
+
+    if (!verifySignature(mail, sig, fromPubKey))
+    {
+        console.log('> ERROR: INVALID SIGNATURE');
+        alert("ERROR: RECEIVED MAIL HAS INVALID SIGNATURE");
+        return;
+    }
 
     //console.log(`FROM: ${from}`);
     //console.log(`MAIL: ${mail}`);

@@ -151,9 +151,10 @@ async function _doMailSending(user, data, type)
 
     let pubKey = reply["public-key"];
     let enc = StringIntoRsaStringList(JSON.stringify(data), pubKey);
+    let sig = createSignature(data, ENV_CLIENT_PRIVATE_KEY);
 
     replyPromise = createOnReceivePromise('mail');
-    sendEncrypted('mail', {action:"send", "to": user, "mail": enc, type:type});
+    sendEncrypted('mail', {action:"send", to: user, mail: enc, type:type, sig:sig});
 
     reply = await replyPromise;
 

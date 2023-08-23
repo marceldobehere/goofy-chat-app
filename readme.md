@@ -53,10 +53,8 @@ Idk
 - Check if auto timeout/deletion of messages works
 - Make deleting your account send that request to the server too
 - Add auto deleting profiles after 4 months of inactivity or something
-- Add saving the pending mails to a file in case of a power-off
 - Improve UI
 - Make an exporter and importer for chats and or private/public keys
-- Make the server not crash sometimes when malformed requests happen smh
 
 ## TODO (security)
 - Set default size of the RSA keys to like 2048 bit or something
