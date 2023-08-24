@@ -40,7 +40,9 @@ So feel free to experiment with it, but don't expect it to be perfect.
 1. Clone the repo
 2. Run `npm install`
 3. Run `npm start`
-4. The server is now running at localhost:80
+4. The server is now running at localhost:443/localhost:80
+5. If you visit the localhost website, you will get redirected to the client hosted on github
+6. If you want to modify the client, open the index.html file locally
 
 
 ## Why am I making this?
