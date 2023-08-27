@@ -18,13 +18,18 @@
         <div id="users" class="item-container users"></div>
         <button id="user-add" onclick="addUserClick()">Add User</button>
 
-        <div id="mail-div" class="item-container mails">
+        <div id="mail-div" class="item-container mails menu-shown">
             <div id="mails" class="item-container mail-list" oncontextmenu="chatRightClick(event);return false;" onscroll="chatScroll()">
             </div>
             <div class="mail-input">
                 <textarea onpaste="imagePastedInTextArea(event)" onkeydown="msgKeyPressed(event);" id="message-input" class="input-msg" placeholder="Enter a Message"></textarea>
                 <button class="send-msg" onclick="messageSend()">Send</button>
             </div>
+        </div>
+
+        <div id="no-mail-div" class="item-container mails menu-hidden">
+            <br>
+            <h1>You have no chats open, add a user first</h1>
         </div>
     </div>
 

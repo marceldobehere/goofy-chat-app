@@ -104,8 +104,12 @@ async function refresh()
 {
     updateAllUsers();
     await showMailsForUser(CURRENT_USER_ID);
-}
 
+    if (CURRENT_USER_ID == 0)
+        hideChatWindow();
+    else
+        showChatWindow();
+}
 
 
 

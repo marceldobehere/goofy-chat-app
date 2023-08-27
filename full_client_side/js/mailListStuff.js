@@ -363,3 +363,16 @@ function unmarkAllMessages()
 
     refresh();
 }
+
+
+function showChatWindow()
+{
+    document.getElementById('mail-div').className = "item-container mails menu-shown";
+    document.getElementById('no-mail-div').className = "item-container mails menu-hidden";
+}
+
+function hideChatWindow()
+{
+    document.getElementById('mail-div').className = "item-container mails menu-hidden";
+    document.getElementById('no-mail-div').className = "item-container mails menu-shown";
+}
