@@ -15,7 +15,7 @@ So feel free to experiment with it, but don't expect it to be perfect.
 
 
 ## How to use the website/app
-1. Visit the client [here](https://marceldobehere.com). (Or open the full_client_side folder locally)
+1. Visit the client [here](https://dono-03.danbot.host:1747/). (Or open the full_client_side folder locally) (I also host it [here](https://marceldobehere.com))
 2. Connect to a server in the settings. (This will be done automatically if you join from my link above)
 3. Read your number/id
 4. Add other people
