@@ -133,3 +133,8 @@ function downloadBase64File(base64DataStr, fileName) {
     downloadLink.download = fileName;
     downloadLink.click();
 }
+
+function downloadTextFile(str, fileName)
+{
+    downloadBase64File("data:text/plain;charset=utf-8," + encodeURIComponent(str), fileName);
+}

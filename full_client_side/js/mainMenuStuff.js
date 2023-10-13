@@ -72,12 +72,53 @@ function serverAddressChange()
 
 function exportProfile()
 {
-    alert('Not implemented yet :(');
+    let data = { ...localStorage };
+
+    let dataStr = JSON.stringify(data);
+
+    downloadTextFile(dataStr, "profile.json");
+
+    alert("Exported profile to profile.json");
 }
 
 function importProfile()
 {
-    alert('Not implemented yet :(');
+    let fileSelector = document.createElement('input');
+    fileSelector.setAttribute('type', 'file');
+    fileSelector.oninput = (data) => {
+        console.log(data);
+        if (fileSelector.files[0])
+        {
+            let file = fileSelector.files[0];
+            let reader = new FileReader();
+            reader.readAsText(file, "UTF-8");
+            reader.onload = (evt) => {
+                try
+                {
+                    let data = evt.target.result;
+                    let dataObj = JSON.parse(data);
+
+                    //console.log(dataObj);
+
+                    localStorage.clear();
+                    for (let key in dataObj)
+                        localStorage.setItem(key, dataObj[key]);
+
+                    location.reload();
+                }
+                catch (e)
+                {
+                    alert("Error parsing file");
+                    return;
+                }
+            }
+            reader.onerror = (evt) => {
+                alert("Error reading file");
+            }
+        }
+    };
+
+    fileSelector.click();
 }
 
 function deleteProfile()
