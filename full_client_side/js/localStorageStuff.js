@@ -1,7 +1,7 @@
 function loadObject(key)
 {
     let temp = localStorage.getItem(key);
-    if (!temp)
+    if (temp == null)
         return null;
 
     return JSON.parse(temp);
@@ -16,7 +16,7 @@ function saveObject(key, obj)
 function loadEncryptedObject(key)
 {
     let temp = localStorage.getItem(key);
-    if (!temp)
+    if (temp = null)
         return null;
 
     //console.log(`RSA> Loading \"${key}\" - ${temp.length} bytes`);
@@ -48,7 +48,7 @@ function aesDecrypt(enc)
 function loadAesEncryptedObject(key)
 {
     let temp = localStorage.getItem(key);
-    if (!temp)
+    if (temp == null)
         return null;
 
     //console.log(`AES> Loading \"${key}\" - ${temp.length} bytes`);

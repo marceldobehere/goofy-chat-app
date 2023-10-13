@@ -94,7 +94,23 @@ function addRecMail(from, pubKey, data, type)
     newMsgCount++;
 
     if (CURRENT_USER_ID == from && (currentUnread > 0 || !atBottom))
+    {
         currentUnread++;
+    }
+
+    let username = user["nickname"];
+    if (!username || username == "")
+        username = from;
+
+    let notifData = data;
+    if (type == "image")
+        notifData = "<Image>";
+    else if (type == "file")
+        notifData = "<File>";
+
+    showNotification(username, notifData, () => {
+        showMailsForUser(from);
+    });
 
     refresh();
 }

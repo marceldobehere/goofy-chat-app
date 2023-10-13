@@ -16,6 +16,7 @@ function loadKeys()
 }
 
 
+
 async function doServerInit()
 {
     loadAndApplyStoredCss();
@@ -67,6 +68,14 @@ async function doServerInit()
     setInterval(updateServerStatus, 1000);
 
     setTimeout(doCheckIfServerDomainMaybeDiff, 3500);
+
+    await checkNotifications();
+
+    updateNotificationButton(ENV_ALLOW_NOTIFICATIONS);
+
+
+    //showNotification("bruh", "test");
+    //showNotification("bruh", "test2");
 }
 
 try
