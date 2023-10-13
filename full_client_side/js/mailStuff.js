@@ -108,6 +108,11 @@ function addRecMail(from, pubKey, data, type)
     else if (type == "file")
         notifData = "<File>";
 
+    if ((!windowVisible() && !canNotify()) || CURRENT_USER_ID != from)
+    {
+        playNotificationSound();
+    }
+
     showNotification(username, notifData, () => {
         showMailsForUser(from);
     });

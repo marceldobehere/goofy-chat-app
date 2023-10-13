@@ -8,6 +8,9 @@ async function checkNotifications()
         && window.location.protocol != "localhost:")
         return;
 
+    if (!ENV_ALLOW_NOTIFICATIONS)
+        return;
+
     if (!("Notification" in window))
         return;
 
@@ -50,24 +53,27 @@ function clearNotifications()
     notifications = [];
 }
 
-function showNotification(title, msg, callback)
+function windowVisible()
+{
+    return (windowHasFocus() || document.visibilityState == "visible")
+}
+function canNotify()
 {
     if (!ENV_ALLOW_NOTIFICATIONS)
-    {
-        //console.log(`> Not showing notification: ${msg} (notifications disabled)`);
-        return;
-    }
+        return false;
     if (!notificationsWork)
-    {
-        //console.log(`> Not showing notification: ${msg} (notifications dont work)`);
-        return;
-    }
+        return false;
+    if (windowVisible())
+        return false;
 
-    if (windowHasFocus() || document.visibilityState == "visible")
-    {
-        //console.log(`> Not showing notification: ${msg} (window has focus)`);
+
+    return true;
+}
+
+function showNotification(title, msg, callback)
+{
+    if (!canNotify())
         return;
-    }
 
     //console.log(`> Showing notification: ${msg}`);
 
@@ -96,11 +102,19 @@ window.addEventListener('visibilitychange', () =>
 });
 
 
-function toggleNotification()
+async function toggleNotification()
 {
     ENV_ALLOW_NOTIFICATIONS = !ENV_ALLOW_NOTIFICATIONS;
     saveObject("ALLOW_NOTIFICATIONS", ENV_ALLOW_NOTIFICATIONS);
     updateNotificationButton(ENV_ALLOW_NOTIFICATIONS);
+    await checkNotifications();
+}
+
+async function toggleMsgSound()
+{
+    ENV_ALLOW_MSG_SOUND = !ENV_ALLOW_MSG_SOUND;
+    saveObject("ALLOW_MSG_SOUND", ENV_ALLOW_MSG_SOUND);
+    updateMsgSoundButton(ENV_ALLOW_MSG_SOUND);
 }
 
 function updateNotificationButton(allow)
@@ -111,4 +125,24 @@ function updateNotificationButton(allow)
         btn.innerText = "Disable notifications";
     else
         btn.innerText = "Enable notifications";
+}
+
+function updateMsgSoundButton(allow)
+{
+    let btn = document.getElementById("main-menu-msg-sound-button");
+
+    if (allow)
+        btn.innerText = "Disable message sounds";
+    else
+        btn.innerText = "Enable message sounds";
+}
+
+
+let msgSound = new Audio("./shared/audio/not.wav");
+function playNotificationSound()
+{
+    if (!ENV_ALLOW_MSG_SOUND)
+        return;
+
+    msgSound.play().then();
 }

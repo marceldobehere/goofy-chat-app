@@ -72,10 +72,7 @@ async function doServerInit()
     await checkNotifications();
 
     updateNotificationButton(ENV_ALLOW_NOTIFICATIONS);
-
-
-    //showNotification("bruh", "test");
-    //showNotification("bruh", "test2");
+    updateMsgSoundButton(ENV_ALLOW_MSG_SOUND);
 }
 
 try

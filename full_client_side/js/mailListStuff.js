@@ -302,10 +302,17 @@ async function _showMailsForUser(user)
 
     document.getElementById('message-input').focus();
 
-    if (userInfo["unread"] != 0 && bottom)
+    if (userInfo["unread"] != 0)
     {
-        userInfo["unread"] = 0;
-        setUserInfo(user, userInfo);
+        if (bottom)
+        {
+            userInfo["unread"] = 0;
+            setUserInfo(user, userInfo);
+        }
+        else
+        {
+
+        }
     }
 
     updateAllUsers();
