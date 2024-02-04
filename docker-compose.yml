@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  goofy_chat_v1:
+    container_name: goofy_chat_v1
+    build: .
+    volumes:
+      - "/etc/letsencrypt:/etc/letsencrypt"
+      - "data:/srv/data"
+    networks:
+      - "nginx-router_default"
+      - "default"
+    restart: always
+
+volumes:
+  data:
+networks:
+  default:
+  nginx-router_default:
+    external: true
