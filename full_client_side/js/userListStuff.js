@@ -32,7 +32,7 @@ function userListAddUser(userId, update)
 
     userBtn.onclick = () => {userClicked(userId, userBtn)};
     userBtn.oncontextmenu = () => {userRightClicked(userId, userBtn); return false;};
-    userBtn.onauxclick = () => {userMiddleClicked(userId, event);};
+    userBtn.onmouseup = () => {userMiddleClicked(userId, event);};
 
     let userSpan = document.createElement("span");
     userSpan.id = `USER-NAME_${userId}`;
