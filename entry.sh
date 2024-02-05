@@ -8,4 +8,4 @@ if [ ! -f data/users.json ]; then
     echo "[]" > data/users.json
 fi
 
-node index.js 
+exec node index.js 
