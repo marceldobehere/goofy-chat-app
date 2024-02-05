@@ -4,15 +4,18 @@ const http = require('http');
 const https = require('https');
 var cors = require('cors');
 const fs = require('fs');
-
+var nodeCleanup = require('node-cleanup');
 
 
 // if /data folder doesnt exist, create it
-
 if (!fs.existsSync(__dirname + "/data"))
 {
     fs.mkdirSync(__dirname + "/data");
+}
 
+// if /data/users.json doesnt exist, create it
+if (!fs.existsSync(__dirname + "/data/users.json"))
+{
     // add empty users.json
     fs.writeFileSync(__dirname + "/data/users.json", "[]");
 }
@@ -133,6 +136,11 @@ calcServiceManager.reloadAllCalcServices();
 
 const shell = require("./yesServer/shell");
 shell.initApp(dbStuff, registerManager, calcServiceManager, mailManager);
+
+nodeCleanup(function (exitCode, signal) {
+    mailManager.logWithTime("S> Backing up mail list before shutdown.")
+    mailManager.backUpMailList();
+});
 
 
 let port = USE_HTTPS ? 443 : 80;

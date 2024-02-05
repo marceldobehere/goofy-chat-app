@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
+    "node-cleanup": "^2.1.2",
     "node-jsencrypt": "^1.0.0",
     "socket.io": "^4.7.2"
   }

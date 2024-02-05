@@ -41,6 +41,16 @@ function initApp(_enc, _app, _io, _dbStuff, _socketSessionStuff)
     app = _app;
     io = _io;
     dbStuff = _dbStuff;
+
+    if (fs.existsSync(__dirname + "/../data//mails_backup.txt"))
+    {
+        let fileData = fs.readFileSync(__dirname + "/../data//mails_backup.txt", 'utf-8');
+        let mails = JSON.parse(fileData);
+        for (let mail of mails)
+            globalMailList.push(mail);
+
+        console.log(`> Loaded Mails from \"${__dirname + "/../data//mails_backup.txt"}\"`);
+    }
     setInterval(backUpMailList, 1000 * 60 * 60 * 1); // every hour
 
     socketSessionStuff.newSocketCallbacks.push(tempCallback);
@@ -228,6 +238,7 @@ function sendAllMailsPossible()
         {
             logWithTime("M> Sending mail to " + usr["userId"]);
             socket.emit("mailRec", enc.sendObj({action: "rec", "mail": mail["mail"], "from": mail["from"], type:mail["type"], sig:mail["sig"], "public-key": mail["public-key"]}, session["public-key"]));
+
         }
     }
 
@@ -238,4 +249,4 @@ function sendAllMailsPossible()
     tempMail = false;
 }
 
-module.exports = {initApp, sec, globalMailList};
+module.exports = {initApp, sec, globalMailList, backUpMailList, logWithTime};
