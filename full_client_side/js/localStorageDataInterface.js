@@ -25,7 +25,7 @@ function clearAllData()
     _IMAGES = {};
     _USERS = [];
 
-    localStorage.clear();
+    LsReset();
 }
 
 function removeUser(userId)
@@ -56,8 +56,8 @@ function addUser(userId)
 
 function removeUserInfo(userId)
 {
-    if (localStorage.getItem(`USER_${userId}`))
-        localStorage.removeItem(`USER_${userId}`);
+    if (LsHas(`USER_${userId}`))
+        LsDel(`USER_${userId}`);
 
     if (_USERS.includes(userId+""))
     {
@@ -68,8 +68,8 @@ function removeUserInfo(userId)
 
 function removeMailsFromUser(userId)
 {
-    if (localStorage.getItem(`MAILS_${userId}`))
-        localStorage.removeItem(`MAILS_${userId}`);
+    if (LsHas(`MAILS_${userId}`))
+        LsDel(`MAILS_${userId}`);
 
     if (_MAILS[userId+""])
         delete _MAILS[userId+""];
@@ -77,8 +77,8 @@ function removeMailsFromUser(userId)
 
 function removeImagesFromUser(userId)
 {
-    if (localStorage.getItem(`IMAGES_${userId}`))
-        localStorage.removeItem(`IMAGES_${userId}`);
+    if (LsHas(`IMAGES_${userId}`))
+        LsDel(`IMAGES_${userId}`);
 
     if (_IMAGES[userId+""])
         delete _IMAGES[userId+""];

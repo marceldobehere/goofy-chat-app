@@ -72,7 +72,10 @@ function serverAddressChange()
 
 function exportProfile()
 {
-    let data = { ...localStorage };
+    let tData = LsGetAll();
+    let data = {};
+    for (let {key, value} of tData)
+        data[key] = value;
 
     let dataStr = JSON.stringify(data);
 
@@ -100,9 +103,9 @@ function importProfile()
 
                     //console.log(dataObj);
 
-                    localStorage.clear();
+                    LsReset();
                     for (let key in dataObj)
-                        localStorage.setItem(key, dataObj[key]);
+                        LsSet(key, dataObj[key]);
 
                     location.reload();
                 }
